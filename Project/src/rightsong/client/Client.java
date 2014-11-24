@@ -2,7 +2,13 @@ package rightsong.client;
 
 import ocsf.client.*;
 
+import java.awt.EventQueue;
 import java.io.*;
+
+import javax.swing.JFrame;
+
+import rightsong.view.IndexPanel;
+import rightsong.view.MainFrame;
 
 /**
  * This class extends AbstractClient from the OCSF framework and overrides some
@@ -13,6 +19,8 @@ import java.io.*;
  */
 public class Client extends AbstractClient {
 
+	private static MainFrame window;
+	
 	/**
 	 * The login ID used by the client to be identified by other clients and the
 	 * server.
@@ -61,7 +69,18 @@ public class Client extends AbstractClient {
 	 *            The message from the server.
 	 */
 	public void handleMessageFromServer(Object msg) {
-		System.out.println(msg.toString());
+		
+		if (msg.equals("#success")) {
+
+			window.getIndexPanel().setLabelSuccessFromLogin((String) msg);
+			window.getIndexPanel();//RESET THE RIGHT PANELS AND ALL
+			System.out.println("user registered with success");
+			
+		} else {
+			
+			window.getIndexPanel().setLabelErrorFromRegister((String) msg);
+			
+		}
 	}
 
 	/**
@@ -115,5 +134,22 @@ public class Client extends AbstractClient {
 	 */
 	protected void connectionClosed() {
 		System.out.println("You have been logged off.");
+	}
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					window = new MainFrame();
+					window.setVisible(true);
+					window.getIndexPanel().setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
