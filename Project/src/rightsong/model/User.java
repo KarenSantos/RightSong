@@ -15,7 +15,7 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String userID;
+	private String id;
 	private String username;
 	private String email;
 	private String password;
@@ -30,7 +30,7 @@ public class User implements Serializable {
 	 * user can also have a list of songs and a list of chords that he has
 	 * uploaded, and a list of repertories.
 	 * 
-	 * @param userID
+	 * @param id
 	 *            The ID of the user.
 	 * @param username
 	 *            The username of the user.
@@ -39,8 +39,8 @@ public class User implements Serializable {
 	 * @param password
 	 *            The password of the user.
 	 */
-	public User(String userID, String username, String email, String password) {
-		this.userID = userID;
+	public User(String id, String username, String email, String password) {
+		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -57,18 +57,18 @@ public class User implements Serializable {
 	 * 
 	 * @return The ID of the user.
 	 */
-	public String getUserID() {
-		return userID;
+	public String getId() {
+		return id;
 	}
 
 	/**
 	 * Sets a new ID for the user.
 	 * 
-	 * @param userID
+	 * @param id
 	 *            The new ID of the user.
 	 */
-	public void setUserID(String userID) {
-		this.userID = userID;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	/**
@@ -165,18 +165,37 @@ public class User implements Serializable {
 	public void addSong(Song song) {
 		if (!songs.contains(song)) {
 			songs.add(song);
+			song.setUser(this);
 		}
 	}
 
 	/**
-	 * Deletes a song from the list of songs of the user.
+	 * Adds a tag to the song uploaded by this user.
 	 * 
 	 * @param song
-	 *            The song to be deleted from the list of songs.
+	 *            The song the tags will be added to.
+	 * @param tag
+	 *            The tag to be added to the song.
 	 */
-	public void deleteSong(Song song) {
-		if (songs.contains(song)) {
-			songs.remove(song);
+	public void addTagToSong(Song song, Tag tag) {
+		if (isMySong(song)) {
+			song.addTag(tag);
+			tag.addSong(song);
+		}
+	}
+
+	/**
+	 * Deletes a tag from the song uploaded by this user.
+	 * 
+	 * @param song
+	 *            The song the tags will be deleted from.
+	 * @param tag
+	 *            The tag to be removed from the song tags.
+	 */
+	public void deleteTagFromSong(Song song, Tag tag) {
+		if (isMySong(song)) {
+			song.deleteTag(tag);
+			tag.deleteSong(song);
 		}
 	}
 
@@ -247,6 +266,21 @@ public class User implements Serializable {
 	}
 
 	/**
+	 * Returns if a song was uploaded by the user or not.
+	 * 
+	 * @param song
+	 *            The song to be checked.
+	 * @return True if the song was uploaded by the user, false otherwise.
+	 */
+	public boolean isMySong(Song song) {
+		boolean answer = false;
+		if (getSongs().contains(song)) {
+			answer = true;
+		}
+		return answer;
+	}
+
+	/**
 	 * Returns the serialVersionUID number of the user.
 	 * 
 	 * @return The serialVersionUID number of the user.
@@ -262,7 +296,7 @@ public class User implements Serializable {
 	public boolean equals(Object obj) {
 		boolean answer = false;
 		if (obj instanceof User) {
-			if (getUserID().equals(((User) obj).getUserID())) {
+			if (getId().equals(((User) obj).getId())) {
 				answer = true;
 			}
 		}

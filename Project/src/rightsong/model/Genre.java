@@ -15,7 +15,7 @@ public class Genre implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String genreID;
+	private String id;
 	private String name;
 	private List<Song> songs;
 
@@ -28,7 +28,7 @@ public class Genre implements Serializable {
 	 *            The name of the genre.
 	 */
 	public Genre(String id, String name) {
-		this.genreID = id;
+		this.id = id;
 		this.name = name;
 		this.songs = new ArrayList<Song>();
 	}
@@ -38,18 +38,18 @@ public class Genre implements Serializable {
 	 * 
 	 * @return The ID of the genre.
 	 */
-	public String getGenreID() {
-		return genreID;
+	public String getId() {
+		return id;
 	}
 
 	/**
 	 * Sets a new ID for the genre.
 	 * 
-	 * @param genreID
+	 * @param id
 	 *            The new ID of the genre.
 	 */
-	public void setTagID(String genreID) {
-		this.genreID = genreID;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class Genre implements Serializable {
 	public boolean equals(Object obj) {
 		boolean answer = false;
 		if (obj instanceof Genre) {
-			if (getGenreID().equals(((Genre) obj).getGenreID())) {
+			if (getId().equals(((Genre) obj).getId())) {
 				answer = true;
 			}
 		}

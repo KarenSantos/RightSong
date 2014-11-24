@@ -2,7 +2,7 @@ package rightsong.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -16,9 +16,9 @@ public class Repertory implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String repertoryID;
+	private String id;
 	private String eventName;
-	private Date date;
+	private Calendar date;
 	private String description;
 	private List<Song> songs;
 
@@ -36,8 +36,8 @@ public class Repertory implements Serializable {
 	 * @param description
 	 *            The description of the repertory.
 	 */
-	public Repertory(String id, String event, Date date, String description) {
-		this.repertoryID = id;
+	public Repertory(String id, String event, Calendar date, String description) {
+		this.id = id;
 		this.eventName = event;
 		this.date = date;
 		this.description = description;
@@ -49,8 +49,8 @@ public class Repertory implements Serializable {
 	 * 
 	 * @return The ID of the repertory.
 	 */
-	public String getRepertoryID() {
-		return repertoryID;
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -59,8 +59,8 @@ public class Repertory implements Serializable {
 	 * @param repertoryID
 	 *            The new ID of the repertory.
 	 */
-	public void setRepertoryID(String repertoryID) {
-		this.repertoryID = repertoryID;
+	public void setId(String repertoryID) {
+		this.id = repertoryID;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class Repertory implements Serializable {
 	 * 
 	 * @return The date of the repertory.
 	 */
-	public Date getDate() {
+	public Calendar getDate() {
 		return date;
 	}
 
@@ -97,7 +97,7 @@ public class Repertory implements Serializable {
 	 * @param date
 	 *            The new date of the repertory.
 	 */
-	public void setDate(Date date) {
+	public void setDate(Calendar date) {
 		this.date = date;
 	}
 
@@ -169,7 +169,7 @@ public class Repertory implements Serializable {
 	public boolean equals(Object obj) {
 		boolean answer = false;
 		if (obj instanceof Repertory) {
-			if (getRepertoryID().equals(((Repertory) obj).getRepertoryID())) {
+			if (getId().equals(((Repertory) obj).getId())) {
 				answer = true;
 			}
 		}

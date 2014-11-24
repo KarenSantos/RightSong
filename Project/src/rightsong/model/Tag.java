@@ -15,7 +15,7 @@ public class Tag implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String tagID;
+	private String id;
 	private String name;
 	private List<Song> songs;
 
@@ -28,7 +28,7 @@ public class Tag implements Serializable {
 	 *            The name of the tag.
 	 */
 	public Tag(String id, String name) {
-		this.tagID = id;
+		this.id = id;
 		this.name = name;
 		this.songs = new ArrayList<Song>();
 	}
@@ -38,8 +38,8 @@ public class Tag implements Serializable {
 	 * 
 	 * @return The ID of the tag.
 	 */
-	public String getTagID() {
-		return tagID;
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -48,8 +48,8 @@ public class Tag implements Serializable {
 	 * @param tagID
 	 *            The new ID of the tag.
 	 */
-	public void setTagID(String tagID) {
-		this.tagID = tagID;
+	public void setId(String tagID) {
+		this.id = tagID;
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class Tag implements Serializable {
 	public boolean equals(Object obj) {
 		boolean answer = false;
 		if (obj instanceof Tag) {
-			if (getTagID().equals(((Tag) obj).getTagID())) {
+			if (getId().equals(((Tag) obj).getId())) {
 				answer = true;
 			}
 		}

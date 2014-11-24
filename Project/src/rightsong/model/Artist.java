@@ -1,6 +1,7 @@
 package rightsong.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Artist class.
@@ -13,19 +14,20 @@ public class Artist implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String artistID;
+	private String id;
 	private String name;
+	private List<Song> songs;
 
 	/**
 	 * Creates a new artist with an ID and a name.
 	 * 
-	 * @param artistID
+	 * @param id
 	 *            The id of the artist.
 	 * @param name
 	 *            The name of the artist.
 	 */
-	public Artist(String artistID, String name) {
-		this.artistID = artistID;
+	public Artist(String id, String name) {
+		this.id = id;
 		this.name = name;
 	}
 
@@ -34,18 +36,18 @@ public class Artist implements Serializable {
 	 * 
 	 * @return The ID of the artist.
 	 */
-	public String getArtistID() {
-		return artistID;
+	public String getId() {
+		return id;
 	}
 
 	/**
 	 * Sets a new ID for the artist.
 	 * 
-	 * @param artistID
+	 * @param id
 	 *            The new ID of the artist.
 	 */
-	public void setArtistID(String artistID) {
-		this.artistID = artistID;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	/**
@@ -68,6 +70,39 @@ public class Artist implements Serializable {
 	}
 
 	/**
+	 * Returns the songs by this artist.
+	 * 
+	 * @return The songs by this artist.
+	 */
+	public List<Song> getSongs() {
+		return songs;
+	}
+
+	/**
+	 * Adds a song to the list of songs by this artist.
+	 * 
+	 * @param song
+	 *            The song to be added to the list of songs.
+	 */
+	public void addSong(Song song) {
+		if (!songs.contains(song)) {
+			songs.add(song);
+		}
+	}
+	
+	/**
+	 * Removes a song from the list of songs by this artist.
+	 * 
+	 * @param song
+	 *            The song to be removed from the list of songs.
+	 */
+	public void removeSong(Song song) {
+		if (songs.contains(song)) {
+			songs.remove(song);
+		}
+	}
+
+	/**
 	 * Returns the serialVersionUID number of the artist.
 	 * 
 	 * @return The serialVersionUID number of the artist.
@@ -83,7 +118,7 @@ public class Artist implements Serializable {
 	public boolean equals(Object obj) {
 		boolean answer = false;
 		if (obj instanceof Artist) {
-			if (getArtistID().equals(((Artist) obj).getArtistID())) {
+			if (getId().equals(((Artist) obj).getId())) {
 				answer = true;
 			}
 		}

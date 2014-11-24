@@ -15,7 +15,7 @@ public class ChordSheet implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String chordSheetID;
+	private String id;
 	private MusicalNote key;
 	private Map<String, int[][]> chords;
 	private User user;
@@ -35,7 +35,7 @@ public class ChordSheet implements Serializable {
 	 */
 	public ChordSheet(String id, MusicalNote key, Map<String, int[][]> chords,
 			User user) {
-		this.chordSheetID = id;
+		this.id = id;
 		this.key = key;
 		this.chords = new HashMap<String, int[][]>();
 		this.user = user;
@@ -46,8 +46,8 @@ public class ChordSheet implements Serializable {
 	 * 
 	 * @return The ID of the chord sheet.
 	 */
-	public String getChordSheetID() {
-		return chordSheetID;
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -56,8 +56,8 @@ public class ChordSheet implements Serializable {
 	 * @param chordSheetID
 	 *            The new ID of the chord sheet.
 	 */
-	public void setChordSheetID(String chordSheetID) {
-		this.chordSheetID = chordSheetID;
+	public void setId(String chordSheetID) {
+		this.id = chordSheetID;
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class ChordSheet implements Serializable {
 	public boolean equals(Object obj) {
 		boolean answer = false;
 		if (obj instanceof ChordSheet) {
-			if (getChordSheetID().equals(((ChordSheet) obj).getChordSheetID())) {
+			if (getId().equals(((ChordSheet) obj).getId())) {
 				answer = true;
 			}
 		}

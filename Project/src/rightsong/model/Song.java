@@ -15,7 +15,7 @@ public class Song implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String songID;
+	private String id;
 	private String title;
 	private List<String> lyrics;
 	private SongSpeed speed;
@@ -32,7 +32,7 @@ public class Song implements Serializable {
 	 * uploaded the song. A song can also have a list of artists, chord sheets,
 	 * tags and genres, and a youtube link.
 	 * 
-	 * @param songID
+	 * @param id
 	 *            The ID of the song.
 	 * @param title
 	 *            The title of the song.
@@ -43,9 +43,9 @@ public class Song implements Serializable {
 	 * @param user
 	 *            The user who uploaded the song.
 	 */
-	public Song(String songID, String title, List<String> lyrics,
+	public Song(String id, String title, List<String> lyrics,
 			SongSpeed speed, User user) {
-		this.songID = songID;
+		this.id = id;
 		this.title = title;
 		this.lyrics = lyrics;
 		this.speed = speed;
@@ -63,18 +63,18 @@ public class Song implements Serializable {
 	 * 
 	 * @return The ID of the song.
 	 */
-	public String getSongID() {
-		return songID;
+	public String getId() {
+		return id;
 	}
 
 	/**
 	 * Sets a new ID for the song.
 	 * 
-	 * @param songID
+	 * @param id
 	 *            The new ID of the song.
 	 */
-	public void setSongID(String songID) {
-		this.songID = songID;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	/**
@@ -171,6 +171,7 @@ public class Song implements Serializable {
 	public void addArtist(Artist artist) {
 		if (!artists.contains(artist)) {
 			artists.add(artist);
+			artist.addSong(this);
 		}
 	}
 
@@ -183,6 +184,7 @@ public class Song implements Serializable {
 	public void deleteArtist(Artist artist) {
 		if (artists.contains(artist)) {
 			artists.remove(artist);
+			artist.removeSong(this);
 		}
 	}
 
@@ -320,7 +322,7 @@ public class Song implements Serializable {
 	public boolean equals(Object obj) {
 		boolean answer = false;
 		if (obj instanceof Song) {
-			if (getSongID().equals(((Song) obj).getSongID())) {
+			if (getId().equals(((Song) obj).getId())) {
 				answer = true;
 			}
 		}

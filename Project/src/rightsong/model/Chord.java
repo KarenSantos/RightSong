@@ -13,7 +13,7 @@ public class Chord implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String chordID;
+	private String id;
 	private MusicalNote note;
 	private ChordType type;
 	private String alteration;
@@ -22,7 +22,7 @@ public class Chord implements Serializable {
 	 * Creates a chord with an ID, a musical note, a chord type and an
 	 * alteration string for complement.
 	 * 
-	 * @param chordID
+	 * @param id
 	 *            The ID of the chord.
 	 * @param note
 	 *            The musical note of the chord.
@@ -31,9 +31,9 @@ public class Chord implements Serializable {
 	 * @param alteration
 	 *            The alteration of the chord if necessary.
 	 */
-	public Chord(String chordID, MusicalNote note, ChordType type,
+	public Chord(String id, MusicalNote note, ChordType type,
 			String alteration) {
-		this.chordID = chordID;
+		this.id = id;
 		this.note = note;
 		this.type = type;
 		this.alteration = alteration;
@@ -44,18 +44,18 @@ public class Chord implements Serializable {
 	 * 
 	 * @return The ID of the chord.
 	 */
-	public String getChordID() {
-		return chordID;
+	public String getId() {
+		return id;
 	}
 
 	/**
 	 * Sets a new ID for the chord.
 	 * 
-	 * @param chordID
+	 * @param id
 	 *            The new ID of the chord.
 	 */
-	public void setChordID(String chordID) {
-		this.chordID = chordID;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class Chord implements Serializable {
 	public boolean equals(Object obj) {
 		boolean answer = false;
 		if (obj instanceof Chord) {
-			if (getChordID().equals(((Chord) obj).getChordID())) {
+			if (getId().equals(((Chord) obj).getId())) {
 				answer = true;
 			}
 		}
