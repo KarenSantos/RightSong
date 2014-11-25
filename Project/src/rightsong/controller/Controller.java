@@ -150,6 +150,7 @@ public class Controller {
 		String id = "tag" + getTags().size() + 1;
 		Tag tag = new Tag(id, tagName);
 		user.addTagToSong(song, tag);
+		tags.add(tag);
 	}
 	
 	public List<Genre> getGenres(){
@@ -161,6 +162,7 @@ public class Controller {
 		String id = "genre" + getGenres().size() + 1;
 		Genre genre = new Genre(id, genreName);
 		user.addGenreToSong(song, genre);
+		genres.add(genre);
 	}
 
 	/**
@@ -202,13 +204,32 @@ public class Controller {
 		}
 		return answer;
 	}
+	
+	public List<List> getData(){
+		List<List> data = new ArrayList<List>();
+		data.add(users);
+		data.add(songs);
+		data.add(artists);
+		data.add(tags);
+		data.add(genres);
+		
+		List<SongSpeed> speeds = new ArrayList<SongSpeed>();
+		speeds.add(SongSpeed.VERY_FAST);
+		speeds.add(SongSpeed.FAST);
+		speeds.add(SongSpeed.MODERATE);
+		speeds.add(SongSpeed.SLOW);
+		speeds.add(SongSpeed.VERY_SLOW);
+		data.add(speeds);
+		
+		return data;
+	}
 
 	private void initializeDataBase() {
 
 		addUser("admin", "admin", "admin");
 		User user = getUserByEmail("admin");
 
-		String[] tags = new String[] { "Romantic", "Chill", "Instrumental",
+		String[] tagNames = new String[] { "Romantic", "Chill", "Instrumental",
 				"Happy" };
 		String[] genre = new String[] {"Rock", "Jazz" };
 		
@@ -218,7 +239,7 @@ public class Controller {
 		
 		Song song = addSong(user, "My First Song", lyrics, SongSpeed.MODERATE);
 
-		for (String tagName : tags) {
+		for (String tagName : tagNames) {
 			addTagToSong(user, song, tagName);
 		}
 		

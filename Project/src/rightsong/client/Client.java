@@ -2,6 +2,7 @@ package rightsong.client;
 
 import java.awt.EventQueue;
 import java.io.IOException;
+import java.util.List;
 
 import ocsf.client.AbstractClient;
 import rightsong.view.MainFrame;
@@ -96,7 +97,6 @@ public class Client extends AbstractClient {
 				window.getLoginPanel().switchToLogin();
 				window.getLoginPanel().setLabelSuccessFromLogin(
 						getUsername() + " registered with success!");
-				quit();
 				
 				break;
 
@@ -117,6 +117,12 @@ public class Client extends AbstractClient {
 					window.getLoginPanel().setVisible(false);
 					window.getIndexPanel().setVisible(true);
 					
+					try {
+						sendToServer("#data");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
 				} else {
 					window.getLoginPanel().setLabelErrorFromLogin("Email or password incorret.");
 				}
@@ -124,7 +130,10 @@ public class Client extends AbstractClient {
 			default:
 				break;
 			}
-
+		} else {
+			
+			window.getIndexPanel().setData((List<List>) msg);
+			
 		}
 	}
 

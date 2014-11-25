@@ -45,6 +45,7 @@ public class Server extends AbstractServer{
 		if (msg instanceof String){
 			
 			String[] info = ((String) msg).split(" ");
+			//TODO change to switch case
 			if(info[0].equals("#register")){
 				
 				String email = info[1];
@@ -95,6 +96,12 @@ public class Server extends AbstractServer{
 					}
 				}
 				
+			} else if(info[0].equals("#data")){
+				try {
+					client.sendToClient(controller.getData());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
 		}

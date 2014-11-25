@@ -9,17 +9,30 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
+import rightsong.model.Tag;
+
 import java.awt.Font;
+import java.awt.FlowLayout;
+import java.util.List;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class IndexPanel extends JPanel {
+	
+	private List<List> data;
 	
 	private JPanel searchArea;
 	private JPanel menuArea;
 	private JScrollPane listArea;
 	private JPanel songArea;
 	
+	private JPanel tagsPanel;
+	private JPanel genrePanel;
+	private JPanel speedPanel;
+	
 	private JTextField searchTextField;
-	private JScrollPane scrollPane;
+	private JLabel lblTest;
 
 	/**
 	 * Create the panel.
@@ -29,6 +42,31 @@ public class IndexPanel extends JPanel {
 		initialize();
 		createSearch();
 
+	}
+	
+	public void setData(List<List> data){
+		this.data = data;
+		
+		lblTest.setText(data.get(3).size() + "");
+		List<Tag> tags = data.get(3);
+		JButton[] tagButtons = new JButton[tags.size()];
+		
+		JButton btn = new JButton("button");
+		btn.setBounds(0, 0, 20, 20);
+		btn.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		tagsPanel.add(btn);
+		btn.setVisible(true);
+		
+		
+		for (int i = 0; i < tags.size(); i++){
+			
+			tagButtons[i] = new JButton(tags.get(i).getName());
+			tagButtons[i].setBounds(0, 0, 10, 10);
+			tagButtons[i].setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+			tagsPanel.add(tagButtons[i]);
+			
+		}
+		
 	}
 	
 	private void initialize(){
@@ -60,6 +98,10 @@ public class IndexPanel extends JPanel {
 		songArea = new JPanel();
 		songArea.setBounds(414, 164, 468, 446);
 		add(songArea);
+		
+		lblTest = new JLabel("");
+		lblTest.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		songArea.add(lblTest);
 	}
 	
 	private void createSearch(){
@@ -79,9 +121,21 @@ public class IndexPanel extends JPanel {
 		btnSearch.setBounds(358, 12, 90, 29);
 		searchArea.add(btnSearch);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 51, 438, 78);
-		searchArea.add(scrollPane);
+		tagsPanel = new JPanel();
+		tagsPanel.setBackground(Color.WHITE);
+		tagsPanel.setBounds(6, 50, 399, 73);
+		searchArea.add(tagsPanel);
+		tagsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		genrePanel = new JPanel();
+		genrePanel.setBackground(Color.WHITE);
+		genrePanel.setBounds(412, 50, 253, 73);
+		searchArea.add(genrePanel);
+		
+		speedPanel = new JPanel();
+		speedPanel.setBackground(Color.WHITE);
+		speedPanel.setBounds(670, 50, 200, 73);
+		searchArea.add(speedPanel);
 		
 	}
 	
