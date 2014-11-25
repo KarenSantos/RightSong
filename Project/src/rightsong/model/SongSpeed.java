@@ -9,16 +9,16 @@ package rightsong.model;
  */
 public enum SongSpeed {
 
-	VERY_SLOW(1), SLOW(2), MODERATE(3), FAST(4), VERY_FAST(5);
+	VERY_SLOW("Very slow"), SLOW("Slow"), MODERATE("Moderate"), FAST("Fast"), VERY_FAST("Very fast");
 
-	private int speed;
+	private String speed;
 
 	/**
 	 * Creates a new song speed.
 	 * 
 	 * @param speed
 	 */
-	private SongSpeed(int speed) {
+	private SongSpeed(String speed) {
 		this.speed = speed;
 	}
 
@@ -27,7 +27,7 @@ public enum SongSpeed {
 	 * 
 	 * @return The value of the song speed.
 	 */
-	public int getValue() {
+	public String getName() {
 		return speed;
 	}
 

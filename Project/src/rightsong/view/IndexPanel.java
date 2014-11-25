@@ -10,6 +10,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+import rightsong.model.Genre;
+import rightsong.model.SongSpeed;
 import rightsong.model.Tag;
 
 import java.awt.Font;
@@ -17,6 +19,9 @@ import java.awt.FlowLayout;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class IndexPanel extends JPanel {
 	
@@ -33,6 +38,12 @@ public class IndexPanel extends JPanel {
 	
 	private JTextField searchTextField;
 	private JLabel lblTest;
+	private JButton btnMySongs;
+	private JButton btnUploadSong;
+	private JButton btnRepertories;
+	private JButton btnNewRepertory;
+	private JButton btnArtists;
+	private JButton btnLogout;
 
 	/**
 	 * Create the panel.
@@ -47,16 +58,14 @@ public class IndexPanel extends JPanel {
 	public void setData(List<List> data){
 		this.data = data;
 		
-		lblTest.setText(data.get(3).size() + "");
-		List<Tag> tags = data.get(3);
+		createTagButtons(data.get(3));
+		createGenreButtons(data.get(4));
+		createSpeedButtons(data.get(5));
+		
+	}
+
+	private void createTagButtons(List<Tag> tags) {
 		JButton[] tagButtons = new JButton[tags.size()];
-		
-		JButton btn = new JButton("button");
-		btn.setBounds(0, 0, 20, 20);
-		btn.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		tagsPanel.add(btn);
-		btn.setVisible(true);
-		
 		
 		for (int i = 0; i < tags.size(); i++){
 			
@@ -64,9 +73,40 @@ public class IndexPanel extends JPanel {
 			tagButtons[i].setBounds(0, 0, 10, 10);
 			tagButtons[i].setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 			tagsPanel.add(tagButtons[i]);
+			tagsPanel.revalidate();
+			tagsPanel.repaint();
 			
 		}
+	}
+	
+	private void createGenreButtons(List<Genre> genres) {
+		JButton[] genreButtons = new JButton[genres.size()];
 		
+		for (int i = 0; i < genres.size(); i++){
+			
+			genreButtons[i] = new JButton(genres.get(i).getName());
+			genreButtons[i].setBounds(0, 0, 10, 10);
+			genreButtons[i].setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+			genrePanel.add(genreButtons[i]);
+			genrePanel.revalidate();
+			genrePanel.repaint();
+			
+		}
+	}
+	
+	private void createSpeedButtons(List<SongSpeed> speeds) {
+		JButton[] speedButtons = new JButton[speeds.size()];
+		
+		for (int i = 0; i < speeds.size(); i++){
+			
+			speedButtons[i] = new JButton(speeds.get(i).getName());
+			speedButtons[i].setBounds(0, 0, 10, 10);
+			speedButtons[i].setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+			speedPanel.add(speedButtons[i]);
+			speedPanel.revalidate();
+			speedPanel.repaint();
+			
+		}
 	}
 	
 	private void initialize(){
@@ -87,7 +127,64 @@ public class IndexPanel extends JPanel {
 		menuArea.setBackground(Color.WHITE);
 		menuArea.setBounds(6, 163, 180, 447);
 		add(menuArea);
-		menuArea.setLayout(null);
+		
+		btnMySongs = new JButton("My Songs");
+		
+		btnUploadSong = new JButton("Upload Song");
+		
+		btnRepertories = new JButton("Repertories");
+		
+		btnNewRepertory = new JButton("New Repertory");
+		
+		btnArtists = new JButton("Artists");
+		
+		btnLogout = new JButton("Logout");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		GroupLayout gl_menuArea = new GroupLayout(menuArea);
+		gl_menuArea.setHorizontalGroup(
+			gl_menuArea.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_menuArea.createSequentialGroup()
+					.addGroup(gl_menuArea.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_menuArea.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnNewRepertory, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))
+						.addGroup(gl_menuArea.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnUploadSong, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))
+						.addGroup(gl_menuArea.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnMySongs, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))
+						.addGroup(gl_menuArea.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnRepertories, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))
+						.addGroup(gl_menuArea.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnArtists, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))
+						.addComponent(btnLogout, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		gl_menuArea.setVerticalGroup(
+			gl_menuArea.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_menuArea.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnMySongs, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnUploadSong, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnRepertories, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnNewRepertory, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnArtists, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnLogout)
+					.addGap(210))
+		);
+		menuArea.setLayout(gl_menuArea);
 		
 		listArea = new JScrollPane();
 		listArea.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
