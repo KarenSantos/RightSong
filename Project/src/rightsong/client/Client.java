@@ -1,13 +1,9 @@
 package rightsong.client;
 
-import ocsf.client.*;
-
 import java.awt.EventQueue;
-import java.io.*;
+import java.io.IOException;
 
-import javax.swing.JFrame;
-
-import rightsong.view.IndexPanel;
+import ocsf.client.AbstractClient;
 import rightsong.view.MainFrame;
 
 /**
@@ -20,12 +16,9 @@ import rightsong.view.MainFrame;
 public class Client extends AbstractClient {
 
 	private static MainFrame window;
-	
-	/**
-	 * The login ID used by the client to be identified by other clients and the
-	 * server.
-	 */
-	private String loginID;
+
+	private String username;
+	private String email;
 
 	/**
 	 * Constructs an instance of the chat client.
@@ -43,23 +36,47 @@ public class Client extends AbstractClient {
 	public Client(String initMessage, String host, int port) throws IOException {
 		super(host, port);
 		openConnection();
+		System.out.println("opening conection");
 		sendToServer(initMessage);
+		getInfo(initMessage);
 	}
 
 	/**
-	 * Returns the login ID of the client.
+	 * Returns the username of the client.
 	 * 
-	 * @return The login ID of the client.
+	 * @return The username of the client.
 	 */
-	public String getLoginID() {
-		return loginID;
+	public String getUsername() {
+		return username;
 	}
 
 	/**
-	 * Sets the login ID of the client.
+	 * Sets the username of the client.
+	 * 
+	 * @param username
+	 *            The new username of the client.
 	 */
-	public void setLoginID(String loginID) {
-		this.loginID = loginID;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
+	 * Returns the email of the client.
+	 * 
+	 * @return The email of the client.
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * Sets the email of the client.
+	 * 
+	 * @param username
+	 *            The new email of the client.
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	/**
@@ -69,17 +86,45 @@ public class Client extends AbstractClient {
 	 *            The message from the server.
 	 */
 	public void handleMessageFromServer(Object msg) {
-		
-		if (msg.equals("#success")) {
 
-			window.getIndexPanel().setLabelSuccessFromLogin((String) msg);
-			window.getIndexPanel();//RESET THE RIGHT PANELS AND ALL
-			System.out.println("user registered with success");
-			
-		} else {
-			
-			window.getIndexPanel().setLabelErrorFromRegister((String) msg);
-			
+		if (msg instanceof String) {
+			String[] messages = ((String) msg).split(" ");
+			String command = messages[0];
+
+			switch (command) {
+			case "#success":
+				window.getLoginPanel().switchToLogin();
+				window.getLoginPanel().setLabelSuccessFromLogin(
+						getUsername() + " registered with success!");
+				quit();
+				
+				break;
+
+			case "#invalidEmail":
+				window.getLoginPanel().setLabelErrorFromRegister(
+						"This email is already registered.");
+				break;
+
+			case "#invalidUsername":
+				window.getLoginPanel().setLabelErrorFromRegister(
+						"This username is already registered.");
+				clearInfo();
+				
+			case "#login":
+				
+				if(messages[1].equals("ok")){
+					
+					window.getLoginPanel().setVisible(false);
+					window.getIndexPanel().setVisible(true);
+					
+				} else {
+					window.getLoginPanel().setLabelErrorFromLogin("Email or password incorret.");
+				}
+
+			default:
+				break;
+			}
+
 		}
 	}
 
@@ -100,7 +145,7 @@ public class Client extends AbstractClient {
 					.println("Could not send message to server. Terminating client.");
 			quit();
 		} else {
-			
+
 		}
 	}
 
@@ -135,7 +180,11 @@ public class Client extends AbstractClient {
 	protected void connectionClosed() {
 		System.out.println("You have been logged off.");
 	}
-	
+
+	private void clearInfo() {
+		setUsername("");
+	}
+
 	/**
 	 * Launch the application.
 	 */
@@ -145,11 +194,17 @@ public class Client extends AbstractClient {
 				try {
 					window = new MainFrame();
 					window.setVisible(true);
-					window.getIndexPanel().setVisible(true);
+					window.getLoginPanel().setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+	
+	private void getInfo(String msg){
+		if (msg.startsWith("#register")){
+			username = msg.split(" ")[2];
+		}
 	}
 }

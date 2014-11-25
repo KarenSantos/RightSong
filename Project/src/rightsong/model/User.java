@@ -178,7 +178,7 @@ public class User implements Serializable {
 	 *            The tag to be added to the song.
 	 */
 	public void addTagToSong(Song song, Tag tag) {
-		if (isMySong(song)) {
+		if (isMySong(song) || getEmail().equals("admin")) {
 			song.addTag(tag);
 			tag.addSong(song);
 		}
@@ -198,7 +198,17 @@ public class User implements Serializable {
 			tag.deleteSong(song);
 		}
 	}
+	
 
+	public void addGenreToSong(Song song, Genre genre) {
+		if (isMySong(song) || getEmail().equals("admin")) {
+			song.addGenre(genre);
+			genre.addSong(song);
+		}
+	}
+
+	//TODO deleteGenreFromSong
+	
 	/**
 	 * Returns the list of chord sheets uploaded by this user.
 	 * 

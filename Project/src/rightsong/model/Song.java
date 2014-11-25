@@ -28,8 +28,7 @@ public class Song implements Serializable {
 	private List<Genre> genres;
 
 	/**
-	 * Creates a new song with an ID, a title, lyrics, a speed and the user who
-	 * uploaded the song. A song can also have a list of artists, chord sheets,
+	 * Creates a new song with an ID, a title, lyrics and a speed . A song can also have a user who uploaded it, a list of artists, chord sheets,
 	 * tags and genres, and a youtube link.
 	 * 
 	 * @param id
@@ -40,16 +39,13 @@ public class Song implements Serializable {
 	 *            The lyrics of the song.
 	 * @param speed
 	 *            The speed of the song.
-	 * @param user
-	 *            The user who uploaded the song.
 	 */
 	public Song(String id, String title, List<String> lyrics,
-			SongSpeed speed, User user) {
+			SongSpeed speed) {
 		this.id = id;
 		this.title = title;
 		this.lyrics = lyrics;
 		this.speed = speed;
-		this.user = user;
 
 		this.artists = new ArrayList<Artist>();
 		this.chordSheets = new ArrayList<ChordSheet>();

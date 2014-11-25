@@ -38,7 +38,7 @@ public class ModelTests {
 		lyrics.add("first line of the lyrics");
 		lyrics.add("second line of the lyrics");
 		
-		Song song = new Song("id", "this song", lyrics, SongSpeed.SLOW, user1);
+		Song song = new Song("id", "this song", lyrics, SongSpeed.SLOW);
 		
 		assertEquals("id", song.getId());
 		assertEquals("this song", song.getTitle());
@@ -114,7 +114,7 @@ public class ModelTests {
 		lyrics.add("first line of the lyrics");
 		lyrics.add("second line of the lyrics");
 		
-		Song song = new Song("id", "this song", lyrics, SongSpeed.SLOW, user1);
+		Song song = new Song("id", "this song", lyrics, SongSpeed.SLOW);
 		
 		user1.addSong(song);
 		
@@ -130,7 +130,7 @@ public class ModelTests {
 		lyrics.add("first line of the lyrics");
 		lyrics.add("second line of the lyrics");
 		
-		Song song = new Song("id", "this song", lyrics, SongSpeed.SLOW, user1);
+		Song song = new Song("id", "this song", lyrics, SongSpeed.SLOW);
 		
 		user1.addSong(song);
 		

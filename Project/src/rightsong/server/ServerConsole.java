@@ -68,7 +68,7 @@ public class ServerConsole {
 		}
 
 		ServerConsole sc = new ServerConsole(port);
-		sc.accept(); // Wait for console data
+//		sc.accept(); // Wait for console data
 
 	}
 }

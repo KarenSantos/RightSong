@@ -14,8 +14,12 @@ import rightsong.model.*;
  */
 public class Controller {
 
+	private User admin;
+
 	private List<User> users;
 	private List<Song> songs;
+	private List<Tag> tags;
+	private List<Genre> genres;
 	private List<Repertory> repertories;
 	private List<Artist> artists;
 	private List<ChordSheet> chordSheets;
@@ -29,11 +33,15 @@ public class Controller {
 
 		users = new ArrayList<User>();
 		songs = new ArrayList<Song>();
+		tags = new ArrayList<Tag>();
+		genres = new ArrayList<Genre>();
 		repertories = new ArrayList<Repertory>();
 		artists = new ArrayList<Artist>();
 		chordSheets = new ArrayList<ChordSheet>();
 		chords = new ArrayList<Chord>();
 
+		initializeDataBase();
+		admin = getUserByEmail("admin");
 	}
 
 	/**
@@ -62,13 +70,13 @@ public class Controller {
 	}
 
 	/**
-	 * Finds a user by its email.
+	 * Returns a user by its email.
 	 * 
 	 * @param email
 	 *            The email of the user.
-	 * @return The user that has the email.
+	 * @return The user that has the email or null if there is none.
 	 */
-	public User findUserByEmail(String email) {
+	public User getUserByEmail(String email) {
 		User user = null;
 		for (User u : users) {
 			if (u.getEmail().equals(email)) {
@@ -80,13 +88,13 @@ public class Controller {
 	}
 
 	/**
-	 * Finds a user by its username.
+	 * Returns a user by its username.
 	 * 
 	 * @param username
 	 *            The username of the user.
-	 * @return The user that has the username.
+	 * @return The user that has the username or null if there is none.
 	 */
-	public User findUserByUsername(String username) {
+	public User getUserByUsername(String username) {
 		User user = null;
 		for (User u : users) {
 			if (u.getUsername().equals(username)) {
@@ -95,6 +103,64 @@ public class Controller {
 			}
 		}
 		return user;
+	}
+
+	/**
+	 * Returns the list of songs of the system.
+	 * 
+	 * @return The list of songs of the system.
+	 */
+	public List<Song> getSongs() {
+		return songs;
+	}
+
+	/**
+	 * Adds a new song to the user and the system.
+	 * 
+	 * @param user
+	 *            The user who uploaded the song.
+	 * @param title
+	 *            The title of the song.
+	 * @param lyrics
+	 *            The lyrics of the song.
+	 * @param speed
+	 *            The speed of the song.
+	 * @return The song added by the user.
+	 */
+	public Song addSong(User user, String title, List<String> lyrics,
+			SongSpeed speed) {
+		String id = "song" + getSongs().size() + 1;
+		Song song = new Song(id, title, lyrics, speed);
+		user.addSong(song);
+		songs.add(song);
+		return song;
+
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void addTagToSong(User user, Song song, Tag tag) {
+		user.addTagToSong(song, tag);
+	}
+
+	public void addTagToSong(User user, Song song, String tagName) {
+		// TODO check if the tag already exists
+		String id = "tag" + getTags().size() + 1;
+		Tag tag = new Tag(id, tagName);
+		user.addTagToSong(song, tag);
+	}
+	
+	public List<Genre> getGenres(){
+		return genres;
+	}
+
+	public void addGenreToSong(User user, Song song, String genreName) {
+		// TODO check if the tag already exists
+		String id = "genre" + getGenres().size() + 1;
+		Genre genre = new Genre(id, genreName);
+		user.addGenreToSong(song, genre);
 	}
 
 	/**
@@ -109,12 +175,56 @@ public class Controller {
 	 */
 	public String isRegistered(String email, String username) {
 		String answer = "";
-		if (findUserByEmail(email) != null) {
+		if (getUserByEmail(email) != null) {
 			answer = "email";
-		} else if (findUserByUsername(username) != null) {
+		} else if (getUserByUsername(username) != null) {
 			answer = "username";
 		}
 		return answer;
 	}
 
+	/**
+	 * Returns if there is a user with this email and password.
+	 * 
+	 * @param email
+	 *            The email of the user.
+	 * @param password
+	 *            The password of the user.
+	 * @return True if the user exists, false otherwise.
+	 */
+	public boolean isUser(String email, String password) {
+		boolean answer = false;
+		User user = getUserByEmail(email);
+		if (user != null){
+			if (user.getPassword().equals(password)) {
+				answer = true;
+			}
+		}
+		return answer;
+	}
+
+	private void initializeDataBase() {
+
+		addUser("admin", "admin", "admin");
+		User user = getUserByEmail("admin");
+
+		String[] tags = new String[] { "Romantic", "Chill", "Instrumental",
+				"Happy" };
+		String[] genre = new String[] {"Rock", "Jazz" };
+		
+		List<String> lyrics = new ArrayList<String>();
+		lyrics.add("First line of the song");
+		lyrics.add("This will be the second line of music");
+		
+		Song song = addSong(user, "My First Song", lyrics, SongSpeed.MODERATE);
+
+		for (String tagName : tags) {
+			addTagToSong(user, song, tagName);
+		}
+		
+		for (String genreName : genre){
+			addGenreToSong(user, song, genreName);
+		}
+
+	}
 }

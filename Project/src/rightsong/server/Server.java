@@ -44,9 +44,9 @@ public class Server extends AbstractServer{
 		
 		if (msg instanceof String){
 			
-			if(((String) msg).startsWith("#register")){
+			String[] info = ((String) msg).split(" ");
+			if(info[0].equals("#register")){
 				
-				String[] info = ((String) msg).split(" ");
 				String email = info[1];
 				String username = info[2];
 				String password = info[3];
@@ -62,17 +62,34 @@ public class Server extends AbstractServer{
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					
 				} else if(registered.equals("email")){
 					try {
 						client.sendToClient("#invalidEmail");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					
 				} else {
 					try {
 						client.sendToClient("#invalidUsername");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			} else if(info[0].equals("#login")){
+				
+				String email = info[1];
+				String password = info[2];
+				
+				if (controller.isUser(email, password)){
+					try {
+						client.sendToClient("#login ok");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+				} else {
+					try {
+						client.sendToClient("#login fail");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
