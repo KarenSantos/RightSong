@@ -21,38 +21,52 @@ public class LoginPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private int port;
-	private String host; 
+	private String host;
 	private Client client;
+
+	private MainFrame mainFrame;
 
 	private JPanel loginArea;
 	private JPanel registerArea;
+	private JPanel setHostArea;
 
 	private JTextField loginTextField;
 	private JTextField passwordField;
-
 	private JTextField emailRegisterTextField;
 	private JTextField usernameRegTextField;
 	private JTextField passwordReg1Field;
 	private JTextField passwordReg2Field;
+	private JTextField setHostTextField;
 
 	private JLabel lblErrorFromLogin;
 	private JLabel lblErrorFromRegister;
 	private JLabel lblSuccessFromLogin;
+	private JLabel lblShowingCurrentHost;
+	private JLabel lblErrorFromSetHost;
 
 	private JButton btnLoginFromLogin;
 	private JButton btnRegisterFromLogin;
 	private JButton btnLoginFromRegister;
 	private JButton btnRegisterFromRegister;
+	private JButton btnOkFromSetHost;
+	private JButton btnCancelFromSetHost;
+
+	private MessageFrame alert;
 
 	/**
 	 * Create the panel.
 	 */
-	public LoginPanel() {
-		
+	public LoginPanel(MainFrame mainFrame, int port, String host) {
+
+		this.mainFrame = mainFrame;
+		this.port = port;
+		this.host = host;
+
 		initialize();
 
 		createLoginArea();
 		createRegisterArea();
+		createSetHostArea();
 		createEvents();
 
 		switchToLogin();
@@ -73,17 +87,22 @@ public class LoginPanel extends JPanel {
 	public void setHost(String host) {
 		this.host = host;
 	}
-	
-	public Client getClient(){
+
+	public Client getClient() {
 		return client;
+	}
+
+	public JTextField getLoginTextField() {
+		return loginTextField;
 	}
 
 	/**
 	 * Switches the panel to the login panel.
 	 */
 	public void switchToLogin() {
-
 		registerArea.setVisible(false);
+		setHostArea.setVisible(false);
+
 		clearLoginForm();
 		loginArea.setVisible(true);
 	}
@@ -92,15 +111,25 @@ public class LoginPanel extends JPanel {
 	 * Switches the panel to the register panel.
 	 */
 	public void switchToRegister() {
-
 		loginArea.setVisible(false);
+		setHostArea.setVisible(false);
+
 		clearRegisterForm();
 		registerArea.setVisible(true);
 	}
-	
+
+	public void switchToSetHost() {
+		loginArea.setVisible(false);
+		registerArea.setVisible(false);
+
+		clearSetHostForm();
+		lblShowingCurrentHost.setText("\"" + host + "\"");
+		setHostArea.setVisible(true);
+	}
+
 	public void setLabelErrorFromLogin(String msg) {
 		lblErrorFromLogin.setText(msg);
-		
+
 	}
 
 	public void setLabelSuccessFromLogin(String msg) {
@@ -110,7 +139,6 @@ public class LoginPanel extends JPanel {
 	public void setLabelErrorFromRegister(String msg) {
 		lblErrorFromRegister.setText(msg);
 	}
-	
 
 	public void clearLoginForm() {
 		loginTextField.setText("");
@@ -127,6 +155,11 @@ public class LoginPanel extends JPanel {
 		lblErrorFromRegister.setText("");
 	}
 
+	public void clearSetHostForm() {
+		setHostTextField.setText("");
+		lblErrorFromSetHost.setText("");
+	}
+
 	private void createEvents() {
 
 		btnLoginFromLogin.addActionListener(new ActionListener() {
@@ -136,41 +169,35 @@ public class LoginPanel extends JPanel {
 				String password = passwordField.getText();
 				if (email.equals("")) {
 					lblErrorFromLogin.setText("Please enter your login email.");
-				} else if (password.equals("")){
+				} else if (password.equals("")) {
 					lblErrorFromLogin.setText("Please enter a password.");
 				} else {
 					try {
-						client = new Client("#login " + email + " " + password, host, port);
-						
+						client = new Client("#login " + email + " " + password,
+								host, port);
+						mainFrame.setClient(client);
+
 					} catch (IOException e2) {
 						lblErrorFromLogin
-								.setText("Cannot open connection. Please check your internet and try again.");
+								.setText("Cannot open connection. Check your internet or host name and try again.");
 					}
 				}
 			}
 		});
 
 		btnRegisterFromLogin.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-				clearRegisterForm();
-				loginArea.setVisible(false);
-				registerArea.setVisible(true);
+				switchToRegister();
 			}
 		});
 
 		btnLoginFromRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				clearLoginForm();
-				registerArea.setVisible(false);
-				loginArea.setVisible(true);
+				switchToLogin();
 			}
 		});
 
 		btnRegisterFromRegister.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 
 				String email = emailRegisterTextField.getText();
@@ -187,12 +214,41 @@ public class LoginPanel extends JPanel {
 					lblErrorFromRegister.setText("Passwords did not match.");
 				} else {
 					try {
-						client = new Client("#register " + email + " " + username + " " + password1, host, port);
+						client = new Client("#register " + email + " "
+								+ username + " " + password1, host, port);
 					} catch (IOException e2) {
 						lblErrorFromRegister
-								.setText("Cannot open connection. Please check your internet and try again.");
+								.setText("Cannot open connection. Check your internet or host name and try again.");
 					}
 				}
+			}
+		});
+
+		btnOkFromSetHost.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				String newHost = setHostTextField.getText();
+				if (newHost.equals("")) {
+					lblErrorFromSetHost
+							.setText("Please enter a valid host name.");
+				} else {
+
+					host = newHost;
+					mainFrame.setHost(host);
+					switchToLogin();
+
+					if (alert == null || alert.isClosed()) {
+						alert = new MessageFrame(mainFrame.getDesktopPane1());
+						alert.setMessage("New host set with success. Current host: \""
+								+ "<i>" + mainFrame.getHost() + "</i>\"");
+					}
+				}
+			}
+		});
+
+		btnCancelFromSetHost.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchToLogin();
 			}
 		});
 
@@ -370,6 +426,64 @@ public class LoginPanel extends JPanel {
 		btnLoginFromRegister.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		btnLoginFromRegister.setBounds(437, 329, 80, 33);
 		registerArea.add(btnLoginFromRegister);
+	}
+
+	private void createSetHostArea() {
+		setHostArea = new JPanel();
+		setHostArea.setBounds(149, 105, 560, 271);
+		add(setHostArea);
+		setHostArea.setLayout(null);
+
+		JPanel setHostFormPanel = new JPanel();
+		setHostFormPanel.setBounds(93, 28, 374, 187);
+		setHostArea.add(setHostFormPanel);
+		setHostFormPanel.setBackground(Color.WHITE);
+		setHostFormPanel.setLayout(null);
+
+		JLabel lblSetHost = new JLabel("Set Host");
+		lblSetHost.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblSetHost.setBackground(new Color(238, 238, 238));
+		lblSetHost.setBounds(158, 6, 69, 29);
+		setHostFormPanel.add(lblSetHost);
+
+		JLabel lblCurrentHost = new JLabel("Current Host:");
+		lblCurrentHost.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		lblCurrentHost.setBounds(28, 47, 98, 22);
+		setHostFormPanel.add(lblCurrentHost);
+
+		lblShowingCurrentHost = new JLabel("");
+		lblShowingCurrentHost
+				.setFont(new Font("Lucida Grande", Font.ITALIC, 14));
+		lblShowingCurrentHost.setBounds(126, 47, 226, 22);
+		setHostFormPanel.add(lblShowingCurrentHost);
+
+		JLabel lblSetTo = new JLabel("Set Host to:");
+		lblSetTo.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		lblSetTo.setBounds(28, 91, 98, 27);
+		setHostFormPanel.add(lblSetTo);
+
+		setHostTextField = new JTextField();
+		setHostTextField.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		setHostTextField.setBounds(113, 91, 241, 27);
+		setHostFormPanel.add(setHostTextField);
+		setHostTextField.setColumns(10);
+
+		btnOkFromSetHost = new JButton("Ok");
+		btnOkFromSetHost.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		btnOkFromSetHost.setBounds(163, 137, 98, 27);
+		setHostFormPanel.add(btnOkFromSetHost);
+
+		btnCancelFromSetHost = new JButton("Cancel");
+		btnCancelFromSetHost.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		btnCancelFromSetHost.setBounds(261, 137, 91, 27);
+		setHostFormPanel.add(btnCancelFromSetHost);
+
+		lblErrorFromSetHost = new JLabel("");
+		lblErrorFromSetHost.setBounds(24, 222, 513, 29);
+		setHostArea.add(lblErrorFromSetHost);
+		lblErrorFromSetHost.setForeground(Color.RED);
+		lblErrorFromSetHost.setHorizontalAlignment(SwingConstants.CENTER);
+
 	}
 
 	private String getDescription() {

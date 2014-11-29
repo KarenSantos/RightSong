@@ -1,16 +1,14 @@
 package rightsong.view;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JDesktopPane;
 
 import rightsong.client.Client;
 
@@ -28,8 +26,6 @@ public class MainFrame extends JFrame {
 
 	private LoginPanel loginPanel;
 	private IndexPanel indexPanel;
-	private SetHostFrame setHostFrame;
-	private MainFrame mainFrame = this;
 	private JDesktopPane desktopPane1;
 	private JDesktopPane desktopPane2;
 
@@ -71,8 +67,20 @@ public class MainFrame extends JFrame {
 		indexPanel.setVisible(true);
 	}
 
+	public String getHost(){
+		return host;
+	}
+	
 	public void setHost(String host) {
 		this.host = host;
+	}
+	
+	public Client getClient(){
+		return client;
+	}
+	
+	public void setClient(Client client){
+		this.client = client;
 	}
 	
 	public JDesktopPane getDesktopPane1(){
@@ -87,7 +95,7 @@ public class MainFrame extends JFrame {
 		setResizable(false);
 		setTitle("RightSong");
 		getContentPane().setBackground(Color.WHITE);
-		setBounds(100, 100, 900, 650);
+		setBounds(200, 100, 900, 650);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
@@ -108,7 +116,7 @@ public class MainFrame extends JFrame {
 		getContentPane().add(menuBar);
 
 		JMenu menu = new JMenu();
-		menu.setText("file");
+		menu.setText("File");
 		menuBar.add(menu);
 
 		setHostMenu = new JMenuItem();
@@ -124,12 +132,7 @@ public class MainFrame extends JFrame {
 	private void createEvents() {
 		setHostMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				if (setHostFrame == null || setHostFrame.isClosed()) {
-
-					setHostFrame = new SetHostFrame(desktopPane1);
-					setHostFrame.setCurrentHost(host, mainFrame);
-				}
+				getLoginPanel().switchToSetHost();
 			}
 		});
 
@@ -142,12 +145,10 @@ public class MainFrame extends JFrame {
 
 	private void createLoginPanel() {
 
-		loginPanel = new LoginPanel();
+		loginPanel = new LoginPanel(this, DEFAULT_PORT, DEFAULT_HOST);
 		loginPanel.setBounds(6, 6, 888, 610);
 		getContentPane().add(loginPanel);
 		loginPanel.setVisible(true);
-		loginPanel.setPort(DEFAULT_PORT);
-		loginPanel.setHost(host);
 	}
 
 	private void createIndexPanel() {

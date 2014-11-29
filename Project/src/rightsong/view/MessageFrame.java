@@ -2,15 +2,14 @@ package rightsong.view;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class MessageFrame extends JInternalFrame {
 
@@ -24,6 +23,12 @@ public class MessageFrame extends JInternalFrame {
 	 */
 	public MessageFrame(JDesktopPane frame) {
 		
+		int width = 350;
+		int height = 200;
+		int xPoint = (int) ((frame.getSize().getWidth()/2) - width/2);
+		int yPoint = (int) ((frame.getSize().getHeight()/2) - height);
+		
+		setBounds(xPoint, yPoint, width, height);
 		getContentPane().setBackground(Color.WHITE);
 		getContentPane().setLayout(null);
 		
@@ -33,7 +38,7 @@ public class MessageFrame extends JInternalFrame {
 		lblMessage.setBounds(24, 18, 281, 86);
 		getContentPane().add(lblMessage);
 		
-		JButton btnOk = new JButton("ok");
+		JButton btnOk = new JButton("OK");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
@@ -43,7 +48,6 @@ public class MessageFrame extends JInternalFrame {
 		btnOk.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		btnOk.setBounds(123, 117, 83, 29);
 		getContentPane().add(btnOk);
-		setBounds(100, 100, 350, 200);
 		
 		setVisible(true);
 		frame.setVisible(true);
