@@ -11,7 +11,7 @@ import java.util.List;
  * @version November 2014
  *
  */
-public class Song implements Serializable {
+public class Song implements Serializable, Comparable<Song> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -309,6 +309,14 @@ public class Song implements Serializable {
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	
+	/**
+	 * Compares songs according to their titles.
+	 */
+	@Override
+	public int compareTo(Song song) {
+		return getTitle().compareTo(song.getTitle());
 	}
 
 	/**

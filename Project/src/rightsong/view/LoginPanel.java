@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
@@ -31,11 +33,11 @@ public class LoginPanel extends JPanel {
 	private JPanel setHostArea;
 
 	private JTextField loginTextField;
-	private JTextField passwordField;
+	private JTextField passwordTextField;
 	private JTextField emailRegisterTextField;
 	private JTextField usernameRegTextField;
-	private JTextField passwordReg1Field;
-	private JTextField passwordReg2Field;
+	private JTextField passwordReg1TextField;
+	private JTextField passwordReg2TextField;
 	private JTextField setHostTextField;
 
 	private JLabel lblErrorFromLogin;
@@ -142,7 +144,7 @@ public class LoginPanel extends JPanel {
 
 	public void clearLoginForm() {
 		loginTextField.setText("");
-		passwordField.setText("");
+		passwordTextField.setText("");
 		lblErrorFromLogin.setText("");
 		lblSuccessFromLogin.setText("");
 	}
@@ -150,8 +152,8 @@ public class LoginPanel extends JPanel {
 	public void clearRegisterForm() {
 		emailRegisterTextField.setText("");
 		usernameRegTextField.setText("");
-		passwordReg1Field.setText("");
-		passwordReg2Field.setText("");
+		passwordReg1TextField.setText("");
+		passwordReg2TextField.setText("");
 		lblErrorFromRegister.setText("");
 	}
 
@@ -166,7 +168,7 @@ public class LoginPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				String email = loginTextField.getText();
-				String password = passwordField.getText();
+				String password = passwordTextField.getText();
 				if (email.equals("")) {
 					lblErrorFromLogin.setText("Please enter your login email.");
 				} else if (password.equals("")) {
@@ -184,6 +186,24 @@ public class LoginPanel extends JPanel {
 				}
 			}
 		});
+		
+		loginTextField.addKeyListener((new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             int key = e.getKeyCode();
+	             if (key == KeyEvent.VK_ENTER) {
+	            	 passwordTextField.requestFocusInWindow();
+	             }
+	         }
+		}));
+		
+		passwordTextField.addKeyListener((new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             int key = e.getKeyCode();
+	             if (key == KeyEvent.VK_ENTER) {
+	            	 btnLoginFromLogin.doClick();
+	             }
+	         }
+		}));
 
 		btnRegisterFromLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -202,8 +222,8 @@ public class LoginPanel extends JPanel {
 
 				String email = emailRegisterTextField.getText();
 				String username = usernameRegTextField.getText();
-				String password1 = passwordReg1Field.getText();
-				String password2 = passwordReg2Field.getText();
+				String password1 = passwordReg1TextField.getText();
+				String password2 = passwordReg2TextField.getText();
 
 				if (email.equals("")) {
 					lblErrorFromRegister.setText("Please enter a valid email.");
@@ -223,6 +243,42 @@ public class LoginPanel extends JPanel {
 				}
 			}
 		});
+		
+		emailRegisterTextField.addKeyListener((new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             int key = e.getKeyCode();
+	             if (key == KeyEvent.VK_ENTER) {
+	            	 usernameRegTextField.requestFocusInWindow();
+	             }
+	         }
+		}));
+		
+		usernameRegTextField.addKeyListener((new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             int key = e.getKeyCode();
+	             if (key == KeyEvent.VK_ENTER) {
+	            	 passwordReg1TextField.requestFocusInWindow();
+	             }
+	         }
+		}));
+		
+		passwordReg1TextField.addKeyListener((new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             int key = e.getKeyCode();
+	             if (key == KeyEvent.VK_ENTER) {
+	            	 passwordReg2TextField.requestFocusInWindow();
+	             }
+	         }
+		}));
+		
+		passwordReg2TextField.addKeyListener((new KeyAdapter() {
+	         public void keyPressed(KeyEvent e) {
+	             int key = e.getKeyCode();
+	             if (key == KeyEvent.VK_ENTER) {
+	            	 btnRegisterFromRegister.doClick();
+	             }
+	         }
+		}));
 
 		btnOkFromSetHost.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -314,9 +370,9 @@ public class LoginPanel extends JPanel {
 		lblPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		loginFormPanel.add(lblPassword);
 
-		passwordField = new JPasswordField();
-		passwordField.setBounds(99, 87, 245, 34);
-		loginFormPanel.add(passwordField);
+		passwordTextField = new JPasswordField();
+		passwordTextField.setBounds(99, 87, 245, 34);
+		loginFormPanel.add(passwordTextField);
 
 		btnLoginFromLogin = new JButton("Login");
 		btnLoginFromLogin.setBounds(262, 127, 82, 29);
@@ -376,9 +432,9 @@ public class LoginPanel extends JPanel {
 		lblPassword1.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		registerFormPanel.add(lblPassword1);
 
-		passwordReg1Field = new JPasswordField();
-		passwordReg1Field.setBounds(155, 125, 283, 40);
-		registerFormPanel.add(passwordReg1Field);
+		passwordReg1TextField = new JPasswordField();
+		passwordReg1TextField.setBounds(155, 125, 283, 40);
+		registerFormPanel.add(passwordReg1TextField);
 
 		JLabel lblRegisterForFree = new JLabel("Register for Free!");
 		lblRegisterForFree.setBounds(149, 12, 136, 19);
@@ -390,9 +446,9 @@ public class LoginPanel extends JPanel {
 		lblPassword2.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		registerFormPanel.add(lblPassword2);
 
-		passwordReg2Field = new JPasswordField();
-		passwordReg2Field.setBounds(155, 166, 283, 40);
-		registerFormPanel.add(passwordReg2Field);
+		passwordReg2TextField = new JPasswordField();
+		passwordReg2TextField.setBounds(155, 166, 283, 40);
+		registerFormPanel.add(passwordReg2TextField);
 
 		lblErrorFromRegister = new JLabel("");
 		lblErrorFromRegister.setBounds(25, 294, 534, 29);

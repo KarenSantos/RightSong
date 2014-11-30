@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
-import rightsong.controller.Controller;
-
 
 /**
  * This class overrides some of the methods in the abstract superclass in order
@@ -14,10 +12,10 @@ import rightsong.controller.Controller;
  * @author Karen Santos
  * @version November 2014
  */
-public class Server extends AbstractServer{
-	
-	private Controller controller;
-	
+public class Server extends AbstractServer {
+
+	private ServerController controller;
+
 	/**
 	 * Constructs an instance of the server.
 	 *
@@ -28,8 +26,8 @@ public class Server extends AbstractServer{
 	 */
 	public Server(int port) {
 		super(port);
-		
-		controller = new Controller();
+
+		controller = new ServerController();
 	}
 
 	/**
@@ -41,29 +39,31 @@ public class Server extends AbstractServer{
 	 *            The connection from which the message originated.
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
-		
-		if (msg instanceof String){
-			
+
+		if (msg instanceof String) {
+
 			String[] info = ((String) msg).split(" ");
-			//TODO change to switch case
-			if(info[0].equals("#register")){
-				
+			String command = info[0];
+
+			switch (command) {
+			case "#register":
+
 				String email = info[1];
 				String username = info[2];
 				String password = info[3];
-				
+
 				String registered = controller.isRegistered(email, username);
-				
-				if(registered.equals("")){
-					
+
+				if (registered.equals("")) {
+
 					controller.addUser(email, username, password);
-					
+
 					try {
 						client.sendToClient("#success");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				} else if(registered.equals("email")){
+				} else if (registered.equals("email")) {
 					try {
 						client.sendToClient("#invalidEmail");
 					} catch (IOException e) {
@@ -76,32 +76,49 @@ public class Server extends AbstractServer{
 						e.printStackTrace();
 					}
 				}
-			} else if(info[0].equals("#login")){
+				break;
 				
-				String email = info[1];
-				String password = info[2];
-				
-				if (controller.isUser(email, password)){
+			case "#login":
+
+				email = info[1];
+				password = info[2];
+
+				if (controller.isUser(email, password)) {
 					try {
+						client.setInfo("email", email);
 						client.sendToClient("#login ok");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					
+
 				} else {
 					try {
 						client.sendToClient("#login fail");
+						client.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
-				
-			} else if(info[0].equals("#data")){
+				break;
+
+			case "#data":
 				try {
-					client.sendToClient(controller.getData());
+					client.sendToClient(controller.getSongs());
+					client.sendToClient(controller.getTags());
+					client.sendToClient(controller.getGenres());
+					client.sendToClient(controller.getUserRepertories((String)client.getInfo("email")));
+					client.sendToClient(controller.getArtists());
+					client.sendToClient(controller.getChordSheets());
+					client.sendToClient(controller.getChords());
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				break;
+				
+			
+			default:
+				break;
 			}
 		} else {
 		}
@@ -155,7 +172,7 @@ public class Server extends AbstractServer{
 	 */
 	@Override
 	synchronized protected void clientDisconnected(ConnectionToClient client) {
-		System.out.println(client.getInfo("LoginID") + " has disconnected.");
+		System.out.println("A client has disconnected.");
 	}
 
 }

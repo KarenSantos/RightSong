@@ -11,6 +11,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import rightsong.client.Client;
+import rightsong.client.ClientController;
 
 public class MainFrame extends JFrame {
 
@@ -20,6 +21,8 @@ public class MainFrame extends JFrame {
 	final private String DEFAULT_HOST = "localhost";
 	private String host;
 	private Client client;
+	
+	private ClientController controller;
 
 	private JMenuItem setHostMenu;
 	private JMenuItem exitMenu;
@@ -35,6 +38,7 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 
 		this.host = DEFAULT_HOST;
+		controller = new ClientController();
 
 		initialize();
 
@@ -42,6 +46,10 @@ public class MainFrame extends JFrame {
 		createIndexPanel();
 		createEvents();
 		switchToLoginPanel();
+	}
+	
+	public ClientController getController() {
+		return controller;
 	}
 
 	public LoginPanel getLoginPanel() {
@@ -64,6 +72,7 @@ public class MainFrame extends JFrame {
 		loginPanel.setVisible(false);
 		setHostMenu.setVisible(false);
 
+		indexPanel.setData();
 		indexPanel.setVisible(true);
 	}
 
@@ -81,6 +90,7 @@ public class MainFrame extends JFrame {
 	
 	public void setClient(Client client){
 		this.client = client;
+		controller.setClient(client);
 	}
 	
 	public JDesktopPane getDesktopPane1(){
@@ -153,7 +163,7 @@ public class MainFrame extends JFrame {
 
 	private void createIndexPanel() {
 
-		indexPanel = new IndexPanel();
+		indexPanel = new IndexPanel(controller);
 		indexPanel.setBounds(0, 0, 888, 616);
 		getContentPane().add(indexPanel);
 		indexPanel.setVisible(true);

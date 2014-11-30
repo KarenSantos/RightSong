@@ -1,6 +1,7 @@
-package rightsong.controller;
+package rightsong.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import rightsong.model.*;
@@ -12,7 +13,7 @@ import rightsong.model.*;
  * @version November 2014
  *
  */
-public class Controller {
+public class ServerController {
 
 	private User admin;
 
@@ -29,7 +30,7 @@ public class Controller {
 	 * Creates a controller with a list of users, songs, repertories, artists,
 	 * chordSheets and chords.
 	 */
-	public Controller() {
+	public ServerController() {
 
 		users = new ArrayList<User>();
 		songs = new ArrayList<Song>();
@@ -39,9 +40,10 @@ public class Controller {
 		artists = new ArrayList<Artist>();
 		chordSheets = new ArrayList<ChordSheet>();
 		chords = new ArrayList<Chord>();
+		
+		admin = addUser("admin", "admin", "admin");
 
-		initializeDataBase();
-		admin = getUserByEmail("admin");
+		initializeSampleDataBase();
 	}
 
 	/**
@@ -63,10 +65,11 @@ public class Controller {
 	 * @param password
 	 *            The password of the new user.
 	 */
-	public void addUser(String email, String username, String password) {
+	public User addUser(String email, String username, String password) {
 		String id = "user" + getUsers().size() + 1;
 		User user = new User(id, username, email, password);
 		users.add(user);
+		return user;
 	}
 
 	/**
@@ -111,6 +114,7 @@ public class Controller {
 	 * @return The list of songs of the system.
 	 */
 	public List<Song> getSongs() {
+		Collections.sort(songs);
 		return songs;
 	}
 
@@ -164,6 +168,26 @@ public class Controller {
 		user.addGenreToSong(song, genre);
 		genres.add(genre);
 	}
+	
+	public List<Repertory> getRepertories(){
+		return repertories;
+	}
+	
+	public List<Repertory> getUserRepertories(String email){
+		return getUserByEmail(email).getRepertories();
+	}
+	
+	public List<Artist> getArtists(){
+		return artists;
+	}
+	
+	public List<ChordSheet> getChordSheets(){
+		return chordSheets;
+	}
+	
+	public List<Chord> getChords(){
+		return chords;
+	}
 
 	/**
 	 * Returns if the email or username given are already registered by a user.
@@ -205,29 +229,13 @@ public class Controller {
 		return answer;
 	}
 	
-	public List<List> getData(){
-		List<List> data = new ArrayList<List>();
-		data.add(users);
-		data.add(songs);
-		data.add(artists);
-		data.add(tags);
-		data.add(genres);
-		
-		List<SongSpeed> speeds = new ArrayList<SongSpeed>();
-		speeds.add(SongSpeed.VERY_FAST);
-		speeds.add(SongSpeed.FAST);
-		speeds.add(SongSpeed.MODERATE);
-		speeds.add(SongSpeed.SLOW);
-		speeds.add(SongSpeed.VERY_SLOW);
-		data.add(speeds);
-		
-		return data;
+	public boolean isAdmin(String email){
+		return email.equals(admin.getEmail());
 	}
 
-	private void initializeDataBase() {
+	private void initializeSampleDataBase() {
 
-		addUser("admin", "admin", "admin");
-		User user = getUserByEmail("admin");
+		User user = addUser("firstUser@email.com", "FirstUser", "1234");
 
 		String[] tagNames = new String[] { "Romantic", "Chill", "Instrumental",
 				"Happy" };
@@ -237,7 +245,7 @@ public class Controller {
 		lyrics.add("First line of the song");
 		lyrics.add("This will be the second line of music");
 		
-		Song song = addSong(user, "My First Song", lyrics, SongSpeed.MODERATE);
+		Song song = addSong(user, "My First Song bla balbla bla", lyrics, SongSpeed.MODERATE);
 
 		for (String tagName : tagNames) {
 			addTagToSong(user, song, tagName);

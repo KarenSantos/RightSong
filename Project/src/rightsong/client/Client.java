@@ -37,7 +37,6 @@ public class Client extends AbstractClient {
 	public Client(String initMessage, String host, int port) throws IOException {
 		super(host, port);
 		openConnection();
-		System.out.println("opening conection");
 		sendToServer(initMessage);
 		getInfo(initMessage);
 	}
@@ -131,9 +130,10 @@ public class Client extends AbstractClient {
 				break;
 			}
 		} else {
-			
-			window.getIndexPanel().setData((List<List>) msg);
-			
+			if(msg instanceof List<?>) {
+				window.getController().setData((List<?>) msg);
+				window.switchToIndexPanel();
+			}
 		}
 	}
 
@@ -180,7 +180,7 @@ public class Client extends AbstractClient {
 	@Override
 	protected void connectionException(Exception exception) {
 		System.out
-				.println("Server has shutdown. Abnormal termination of connection.");
+				.println("Server has terminated connection.");
 	}
 
 	/**

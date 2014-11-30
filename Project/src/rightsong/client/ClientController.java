@@ -1,101 +1,156 @@
 package rightsong.client;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import rightsong.model.*;
 
 /**
- * This class constructs the UI for a chat client. It implements the chat
- * interface in order to activate the display() method. Warning: Some of the
- * code here is cloned in ServerConsole
+ * Controller class for the RightSong server.
+ * 
+ * @author karensantos
+ * @version November 2014
  *
- * @author Fran&ccedil;ois B&eacute;langer
- * @author Dr Timothy C. Lethbridge
- * @author Dr Robert Lagani&egrave;re
- * @version July 2000
  */
 public class ClientController {
+	
+	private Client client;
 
-	/**
-	 * The default port to connect on.
-	 */
-	final public static int DEFAULT_PORT = 5555;
-
-	/**
-	 * The instance of the client that created this ConsoleChat.
-	 */
-	Client client;
-
-	/**
-	 * Constructs an instance of the ClientConsole UI.
-	 *
-	 * @param host
-	 *            The host to connect to.
-	 * @param port
-	 *            The port to connect on.
-	 * @param loginID
-	 *            The login ID of the client.
-	 */
-	public ClientController(String login, String password, String host, int port) {
-//		client = new Client(login, host, port);
-	}
-
-	/**
-	 * This method waits for input from the console. Once it is received, it
-	 * sends it to the client's message handler.
-	 */
-	public void accept() {
-		try {
-			BufferedReader fromConsole = new BufferedReader(
-					new InputStreamReader(System.in));
-			String message;
-
-			while (true) {
-				message = fromConsole.readLine();
-				client.handleMessageFromClientUI(message);
-			}
-		} catch (Exception ex) {
-			System.out.println("Unexpected error while reading from console!");
-		}
-	}
-
-
-	/**
-	 * This method is responsible for the creation of the Client UI.
-	 *
-	 * @param args
-	 *            [0] The host to connect to.
-	 */
-	public static void main(String[] args) {
+	private List<Song> songs;
+	private List<Song> mySongs;
+	private List<Tag> tags;
+	private List<Genre> genres;
+	private List<SongSpeed> speeds;
+	private List<Repertory> myRepertories;
+	private List<Artist> artists;
+	private List<ChordSheet> chordSheets;
+	private List<Chord> chords;
+	
+	public ClientController(){
+		songs = new ArrayList<Song>();
+		mySongs = new ArrayList<Song>();
+		tags = new ArrayList<Tag>();
+		genres = new ArrayList<Genre>();
+		myRepertories = new ArrayList<Repertory>();
+		artists = new ArrayList<Artist>();
+		chordSheets = new ArrayList<ChordSheet>();
+		chords = new ArrayList<Chord>();
 		
-		
-		String loginID = "";
-		String host = "";
-		int port = 0; // The port number
-
-		// **** Changed for E51' - JI and KS
-		try {
-			loginID = args[0];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out
-					.println("A login ID is required. System is terminating.");
-			System.exit(0);
-		}
-
-		try {
-			host = args[1];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			host = "localhost";
-		}
-
-		try {
-			port = Integer.parseInt(args[2]);
-		} catch (Exception e) {
-			port = DEFAULT_PORT;
-		}
-
-//		ClientController clientController = new ClientController(login, password, host, port);
-//		clientController.accept(); // Wait for console data
-
+		setSpeeds();
 	}
 	
+	public void setClient(Client client){
+		this.client = client;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setData(List<?> list){
+		
+		if(list.get(0) instanceof Song){
+			setSongs((List<Song>) list);
+			setMySongs();
+		}
+		else if(list.get(0) instanceof Tag){
+			setTags((List<Tag>) list);
+		}
+		else if(list.get(0) instanceof Genre){
+			setGenres((List<Genre>) list);
+		}
+		else if(list.get(0) instanceof Repertory){
+			setMyRepertories((List<Repertory>) list);
+		}
+		else if(list.get(0) instanceof Artist){
+			setArtists((List<Artist>) list);
+		}
+		else if(list.get(0) instanceof ChordSheet){
+			setChordSheets((List<ChordSheet>) list);
+		}
+		else if(list.get(0) instanceof Chord){
+			setChords((List<Chord>) list);
+		}
+	}
+
+	public List<Song> getSongs() {
+		Collections.sort(songs);
+		return songs;
+	}
+	
+	public List<Song> getMySongs(){
+		Collections.sort(mySongs);
+		return mySongs;
+	}
+
+	public void setSongs(List<Song> songs) {
+		this.songs = songs;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
+
+	public List<Genre> getGenres() {
+		return genres;
+	}
+
+	public void setGenres(List<Genre> genres) {
+		this.genres = genres;
+	}
+	
+	public List<SongSpeed> getSpeeds(){
+		return speeds;
+	}
+
+	public List<Repertory> getMyRepertories() {
+		return myRepertories;
+	}
+
+	public void setMyRepertories(List<Repertory> repertories) {
+		this.myRepertories = repertories;
+	}
+
+	public List<Artist> getArtists() {
+		return artists;
+	}
+
+	public void setArtists(List<Artist> artists) {
+		this.artists = artists;
+	}
+
+	public List<ChordSheet> getChordSheets() {
+		return chordSheets;
+	}
+
+	public void setChordSheets(List<ChordSheet> chordSheets) {
+		this.chordSheets = chordSheets;
+	}
+
+	public List<Chord> getChords() {
+		return chords;
+	}
+
+	public void setChords(List<Chord> chords) {
+		this.chords = chords;
+	}
+	
+	private void setSpeeds() {
+		speeds = new ArrayList<SongSpeed>();
+		speeds.add(SongSpeed.VERY_FAST);
+		speeds.add(SongSpeed.FAST);
+		speeds.add(SongSpeed.MODERATE);
+		speeds.add(SongSpeed.SLOW);
+		speeds.add(SongSpeed.VERY_SLOW);
+	}
+	
+	private void setMySongs(){
+		for (Song s : getSongs()){
+			if (s.getUser().getEmail().equals(client.getEmail())){
+				mySongs.add(s);
+			}
+		}
+	}
 }
