@@ -33,6 +33,7 @@ public class IndexPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	private IndexPanel indexPanel = this;
 	private MainFrame mainFrame;
 	private ClientController controller;
 	private MessageFrame alert;
@@ -86,7 +87,25 @@ public class IndexPanel extends JPanel {
 		createModelLists();
 		createLists();
 		createListsEvents();
+		revalidate();
+		repaint();
 
+	}
+
+	public boolean addSong(Song song) {
+		boolean answer = mainFrame.addSong(song);
+		if(answer){
+			if (alert == null || alert.isClosed()) {
+				alert = new MessageFrame(mainFrame.getDesktopPane1());
+				alert.setMessage("Your song was uploaded with success.");
+				alert.requestFocusInWindow();
+			}
+		}
+		return answer;
+	}
+	
+	public void logout(){
+		btnLogout.doClick();
 	}
 
 	private void createTagButtons() {
@@ -234,19 +253,22 @@ public class IndexPanel extends JPanel {
 
 		songsList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								int songIndex = songsList.getSelectedIndex();
-								SongFrame frame = new SongFrame(controller
-										.getSongs().get(songIndex));
-								frame.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
+				if (!songsListModel.isEmpty()) {
+					if (e.getClickCount() == 2) {
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									int songIndex = songsList
+											.getSelectedIndex();
+									SongFrame frame = new SongFrame(controller
+											.getSongs().get(songIndex));
+									frame.setVisible(true);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
-						}
-					});
+						});
+					}
 				}
 			}
 		});
@@ -257,8 +279,17 @@ public class IndexPanel extends JPanel {
 
 		btnUploadSong.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							UploadSongFrame frame = new UploadSongFrame(
+									indexPanel, controller);
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
 			}
 		});
 
@@ -271,6 +302,7 @@ public class IndexPanel extends JPanel {
 		btnSync.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					mainFrame.getClient().setSync(true);
 					mainFrame.getClient().sendToServer("data");
 				} catch (IOException e1) {
 					if (alert == null || alert.isClosed()) {

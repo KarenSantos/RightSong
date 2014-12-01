@@ -45,6 +45,19 @@ public class ServerController {
 
 		initializeSampleDataBase();
 	}
+	
+	public List<List<?>> getData(String email){
+		List<List<?>> data = new ArrayList<List<?>>();
+		
+		data.add(getSongs());
+		data.add(getTags());
+		data.add(getGenres());
+		data.add(getUserRepertories(email));
+		data.add(getArtists());
+		data.add(getChordSheets());
+		data.add(getChords());
+		return data;
+	}
 
 	/**
 	 * Returns the users registered in the system.
@@ -118,47 +131,71 @@ public class ServerController {
 		return songs;
 	}
 
-	/**
-	 * Adds a new song to the user and the system.
-	 * 
-	 * @param user
-	 *            The user who uploaded the song.
-	 * @param title
-	 *            The title of the song.
-	 * @param lyrics
-	 *            The lyrics of the song.
-	 * @param speed
-	 *            The speed of the song.
-	 * @return The song added by the user.
-	 */
-	public Song addSong(User user, String title, List<String> lyrics,
-			SongSpeed speed) {
+	public boolean addSong(String email, Song song) {
 		String id = "song" + getSongs().size() + 1;
-		Song song = new Song(id, title, lyrics, speed);
-		user.addSong(song);
-		songs.add(song);
-		return song;
-
+		Song newSong = new Song(id, song.getTitle(), song.getLyrics(), song.getSpeed());
+		
+		if(!song.getArtists().isEmpty()){
+			for (Artist a : song.getArtists()){
+				newSong.addArtist(createArtist(a.getName()));
+			}
+		}
+		
+		for (Genre g : song.getGenres()){
+			newSong.addGenre(g);
+		}
+		for (Tag t : song.getTags()){
+			newSong.addTag(t);
+		}
+		
+		User user = getUserByEmail(email);
+		user.addSong(newSong);
+		songs.add(newSong);
+		return true;
 	}
 
 	public List<Tag> getTags() {
 		return tags;
 	}
-
+	
+	public Tag createTag(String name){
+		Tag tag = null;
+		for(Tag t : getTags()){
+			if(t.getName().equals(name)){
+				tag = t;
+				break;
+			}
+		} 
+		if (tag == null) {
+			String id = "tag" + getTags().size() + 1;
+			tag = new Tag(id, name);
+		}
+		tags.add(tag);
+		return tag;
+	}
+	
 	public void addTagToSong(User user, Song song, Tag tag) {
 		user.addTagToSong(song, tag);
 	}
 
-	public void addTagToSong(User user, Song song, String tagName) {
-		// TODO check if the tag already exists
-		String id = "tag" + getTags().size() + 1;
-		Tag tag = new Tag(id, tagName);
-		user.addTagToSong(song, tag);
-		tags.add(tag);
-	}
-	
 	public List<Genre> getGenres(){
 		return genres;
+	}
+	
+	public Genre createGenre(String name){
+		Genre genre = null;
+		for(Genre g : getGenres()){
+			if(g.getName().equals(name)){
+				genre = g;
+				break;
+			}
+		} 
+		if (genre == null) {
+			String id = "genre" + getGenres().size() + 1;
+			genre = new Genre(id, name);
+		}
+		genres.add(genre);
+		return genre;
 	}
 
 	public void addGenreToSong(User user, Song song, String genreName) {
@@ -179,6 +216,22 @@ public class ServerController {
 	
 	public List<Artist> getArtists(){
 		return artists;
+	}
+	
+	public Artist createArtist(String name){
+		Artist artist = null;
+		for(Artist a : getArtists()){
+			if(a.getName().equals(name)){
+				artist = a;
+				break;
+			}
+		} 
+		if (artist == null) {
+			String id = "artist" + getArtists().size() + 1;
+			artist = new Artist(id, name);
+		}
+		artists.add(artist);
+		return artist;
 	}
 	
 	public List<ChordSheet> getChordSheets(){
@@ -235,25 +288,23 @@ public class ServerController {
 
 	private void initializeSampleDataBase() {
 
-		User user = addUser("firstUser@email.com", "FirstUser", "1234");
+		String email = "firstUser@email.com";
+		addUser(email, "FirstUser", "1234");
 
-		String[] tagNames = new String[] { "Romantic", "Chill", "Instrumental",
-				"Happy" };
-		String[] genre = new String[] {"Rock", "Jazz" };
-		
 		List<String> lyrics = new ArrayList<String>();
 		lyrics.add("First line of the song");
 		lyrics.add("This will be the second line of music");
 		
-		Song song = addSong(user, "My First Song", lyrics, SongSpeed.MODERATE);
-
-		for (String tagName : tagNames) {
-			addTagToSong(user, song, tagName);
-		}
+		Song song = new Song("id", "My First Song", lyrics, SongSpeed.MODERATE);
 		
-		for (String genreName : genre){
-			addGenreToSong(user, song, genreName);
-		}
-
+		song.addTag(createTag("Romantic"));
+		song.addTag(createTag("Chill"));
+		song.addTag(createTag("Instrumental"));
+		song.addTag(createTag("Happy"));
+		
+		song.addGenre(createGenre("Rock"));
+		song.addGenre(createGenre("Jazz"));
+		
+		addSong(email, song);
 	}
 }

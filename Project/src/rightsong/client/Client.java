@@ -1,8 +1,6 @@
 package rightsong.client;
 
-import java.awt.EventQueue;
 import java.io.IOException;
-import java.util.List;
 
 import ocsf.client.AbstractClient;
 import rightsong.view.MainFrame;
@@ -16,26 +14,31 @@ import rightsong.view.MainFrame;
  */
 public class Client extends AbstractClient {
 
-	private static MainFrame window;
+	private MainFrame window;
 
 	private String username;
 	private String email;
 
+	private boolean sync;
+
 	/**
-	 * Constructs an instance of the chat client.
+	 * Constructs an instance of the right song client.
 	 *
+	 * @param frame
+	 *            The main frame from the client UI.
+	 * @param initMessage
+	 *            The initial message from the client.
 	 * @param host
 	 *            The server to connect to.
 	 * @param port
 	 *            The port number to connect on.
-	 * @param clientUI
-	 *            The interface type variable.
-	 * @param initMessage
-	 *            The initial message from the client.
+	 * 
 	 * @throws IOException
 	 */
-	public Client(String initMessage, String host, int port) throws IOException {
+	public Client(MainFrame frame, String initMessage, String host, int port)
+			throws IOException {
 		super(host, port);
+		this.window = frame;
 		openConnection();
 		sendToServer(initMessage);
 		getInfo(initMessage);
@@ -80,6 +83,16 @@ public class Client extends AbstractClient {
 	}
 
 	/**
+	 * Sets the control variable sync.
+	 * 
+	 * @param sync
+	 *            The control variable sync.
+	 */
+	public void setSync(boolean sync) {
+		this.sync = sync;
+	}
+
+	/**
 	 * This method handles all data that comes in from the server.
 	 *
 	 * @param msg
@@ -96,7 +109,7 @@ public class Client extends AbstractClient {
 				window.getLoginPanel().switchToLogin();
 				window.getLoginPanel().setLabelSuccessFromLogin(
 						getUsername() + " registered with success!");
-				
+
 				break;
 
 			case "#invalidEmail":
@@ -108,30 +121,47 @@ public class Client extends AbstractClient {
 				window.getLoginPanel().setLabelErrorFromRegister(
 						"This username is already registered.");
 				clearInfo();
-				
+
 			case "#login":
-				
-				if(messages[1].equals("ok")){
-					
+
+				if (messages[1].equals("ok")) {
+
 					try {
 						sendToServer("#data");
-						window.getLoginPanel().setVisible(false);
-						window.getIndexPanel().setVisible(true);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					
+
 				} else {
-					window.getLoginPanel().setLabelErrorFromLogin("Email or password incorret.");
+					window.getLoginPanel().setLabelErrorFromLogin(
+							"Email or password incorret.");
+				}
+			case "#song":
+				if (messages[1].equals("added")) {
+					System.out.println("song added received from server");
+					sync = true;
+					try {
+						sendToServer("#data");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+				} else {
 				}
 
 			default:
 				break;
 			}
 		} else {
-			if(msg instanceof List<?>) {
-				window.getController().setData((List<?>) msg);
-				window.switchToIndexPanel();
+			if (msg instanceof Object) {
+				if (window.getController().setData(msg)) {
+					if (sync) {
+						window.clearIndexPanel();
+						sync = false;
+					} else {
+						window.switchToIndexPanel();
+					}
+				}
 			}
 		}
 	}
@@ -178,8 +208,7 @@ public class Client extends AbstractClient {
 	 */
 	@Override
 	protected void connectionException(Exception exception) {
-		System.out
-				.println("Server has terminated connection.");
+		System.out.println("Server has terminated connection.");
 	}
 
 	/**
@@ -193,25 +222,8 @@ public class Client extends AbstractClient {
 		setUsername("");
 	}
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					window = new MainFrame();
-					window.setVisible(true);
-					window.getLoginPanel().setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	private void getInfo(String msg){
-		if (msg.startsWith("#register")){
+	private void getInfo(String msg) {
+		if (msg.startsWith("#register")) {
 			username = msg.split(" ")[2];
 		}
 	}

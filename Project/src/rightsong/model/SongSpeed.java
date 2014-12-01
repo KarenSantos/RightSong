@@ -30,5 +30,10 @@ public enum SongSpeed {
 	public String getName() {
 		return speed;
 	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
 
 }

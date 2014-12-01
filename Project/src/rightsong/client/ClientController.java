@@ -14,6 +14,14 @@ import rightsong.model.*;
  *
  */
 public class ClientController {
+
+	final private int SONGS = 0;
+	final private int TAGS = 1;
+	final private int GENRES = 2;
+	final private int REPERTORIES = 3;
+	final private int ARTISTS = 4;
+	final private int CHORD_SHEETS = 5;
+	final private int CHORDS = 6;
 	
 	private Client client;
 
@@ -26,8 +34,8 @@ public class ClientController {
 	private List<Artist> artists;
 	private List<ChordSheet> chordSheets;
 	private List<Chord> chords;
-	
-	public ClientController(){
+
+	public ClientController() {
 		songs = new ArrayList<Song>();
 		mySongs = new ArrayList<Song>();
 		tags = new ArrayList<Tag>();
@@ -36,47 +44,37 @@ public class ClientController {
 		artists = new ArrayList<Artist>();
 		chordSheets = new ArrayList<ChordSheet>();
 		chords = new ArrayList<Chord>();
-		
+
 		setSpeeds();
 	}
-	
-	public void setClient(Client client){
+
+	public void setClient(Client client) {
 		this.client = client;
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setData(List<?> list){
+	public boolean setData(Object data) {
+
+		List<List<?>> lists = (List<List<?>>) data;
 		
-		if(list.get(0) instanceof Song){
-			setSongs((List<Song>) list);
-			setMySongs();
-		}
-		else if(list.get(0) instanceof Tag){
-			setTags((List<Tag>) list);
-		}
-		else if(list.get(0) instanceof Genre){
-			setGenres((List<Genre>) list);
-		}
-		else if(list.get(0) instanceof Repertory){
-			setMyRepertories((List<Repertory>) list);
-		}
-		else if(list.get(0) instanceof Artist){
-			setArtists((List<Artist>) list);
-		}
-		else if(list.get(0) instanceof ChordSheet){
-			setChordSheets((List<ChordSheet>) list);
-		}
-		else if(list.get(0) instanceof Chord){
-			setChords((List<Chord>) list);
-		}
+		setSongs((List<Song>) lists.get(SONGS));
+		setMySongs();
+		setTags((List<Tag>) lists.get(TAGS));
+		setGenres((List<Genre>) lists.get(GENRES));
+		setMyRepertories((List<Repertory>) lists.get(REPERTORIES));
+		setArtists((List<Artist>) lists.get(ARTISTS));
+		setChordSheets((List<ChordSheet>) lists.get(CHORD_SHEETS));
+		setChords((List<Chord>) lists.get(CHORDS));
+		
+		return true;
 	}
 
 	public List<Song> getSongs() {
 		Collections.sort(songs);
 		return songs;
 	}
-	
-	public List<Song> getMySongs(){
+
+	public List<Song> getMySongs() {
 		Collections.sort(mySongs);
 		return mySongs;
 	}
@@ -100,8 +98,8 @@ public class ClientController {
 	public void setGenres(List<Genre> genres) {
 		this.genres = genres;
 	}
-	
-	public List<SongSpeed> getSpeeds(){
+
+	public List<SongSpeed> getSpeeds() {
 		return speeds;
 	}
 
@@ -136,7 +134,7 @@ public class ClientController {
 	public void setChords(List<Chord> chords) {
 		this.chords = chords;
 	}
-	
+
 	private void setSpeeds() {
 		speeds = new ArrayList<SongSpeed>();
 		speeds.add(SongSpeed.VERY_FAST);
@@ -145,10 +143,10 @@ public class ClientController {
 		speeds.add(SongSpeed.SLOW);
 		speeds.add(SongSpeed.VERY_SLOW);
 	}
-	
-	private void setMySongs(){
-		for (Song s : getSongs()){
-			if (s.getUser().getEmail().equals(client.getEmail())){
+
+	private void setMySongs() {
+		for (Song s : getSongs()) {
+			if (s.getUser().getEmail().equals(client.getEmail())) {
 				mySongs.add(s);
 			}
 		}

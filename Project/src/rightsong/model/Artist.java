@@ -1,6 +1,7 @@
 package rightsong.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class Artist implements Serializable {
 	public Artist(String id, String name) {
 		this.id = id;
 		this.name = name;
+		songs = new ArrayList<Song>();
 	}
 
 	/**

@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
  */
 public class ServerConsole {
 
-	final public static int DEFAULT_PORT = 7777;
+	final public static int DEFAULT_PORT = 3777;
 
 	private Server server;
 
@@ -27,6 +27,7 @@ public class ServerConsole {
 		try {
 			server.listen(); 
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			System.out.println("ERROR - Could not listen for clients!");
 		}
 	}

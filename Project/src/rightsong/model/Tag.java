@@ -132,7 +132,7 @@ public class Tag implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Tag: " + getName();
+		return getName();
 	}
 
 }

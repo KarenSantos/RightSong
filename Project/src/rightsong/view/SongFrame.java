@@ -17,6 +17,8 @@ import rightsong.model.Song;
 import javax.swing.JTextPane;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class SongFrame extends JFrame {
 
@@ -32,8 +34,14 @@ public class SongFrame extends JFrame {
 	private JScrollPane songLyricPane;
 	private JTextPane songLyricText;
 	
+	private JScrollPane songChordsPane;
+	private JTextPane songChordsText;
+	
 	private JPanel genrePanel;
 	private JPanel tagsPanel;
+	
+	private JButton btnChords;
+	private JButton btnLyrics;
 
 	/**
 	 * Create the frame.
@@ -41,6 +49,10 @@ public class SongFrame extends JFrame {
 	public SongFrame(Song song) {
 
 		initialize();
+		createEvents();
+		btnLyrics.setVisible(false);
+		songChordsPane.setVisible(false);
+		
 		showSong(song);
 	}
 
@@ -85,6 +97,16 @@ public class SongFrame extends JFrame {
 		songLyricText.setEditable(false);
 		songLyricPane.setViewportView(songLyricText);
 		
+		songChordsPane = new JScrollPane();
+		songChordsPane.setBounds(6, 84, 420, 488);
+		songChordsPane
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		getContentPane().add(songChordsPane);
+		
+		songChordsText = new JTextPane();
+		songChordsText.setEditable(false);
+		songChordsPane.setViewportView(songChordsText);
+		
 		genrePanel = new JPanel();
 		genrePanel.setBounds(438, 117, 276, 143);
 		genrePanel.setBackground(Color.WHITE);
@@ -108,6 +130,30 @@ public class SongFrame extends JFrame {
 		lblTags.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTags.setBounds(438, 272, 276, 32);
 		contentPane.add(lblTags);
+		
+		btnChords = new JButton("Chords");
+		btnChords.setBounds(330, 58, 96, 29);
+		contentPane.add(btnChords);
+		
+		btnLyrics = new JButton("Lyrics");
+		btnLyrics.setBounds(330, 58, 96, 29);
+		contentPane.add(btnLyrics);
+	}
+	
+	private void createEvents(){
+		
+		btnChords.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchToChords();
+			}
+		});
+		
+		btnLyrics.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchToLyrics();
+			}
+		});
+		
 	}
 
 	private void showSong(Song song) {
@@ -139,6 +185,15 @@ public class SongFrame extends JFrame {
 		songLyricText.setContentType("text/html");
 		songLyricText.setText(lyrics);
 		
+		String chords = "<html>";
+		if(song.getChordSheets().size() == 0){
+			chords += "<br><br><br><center>No chords uploaded for this song.</center></html>";
+		} else {
+			
+		}
+		songChordsText.setContentType("text/html");
+		songChordsText.setText(chords);
+		
 		JButton[] tagButtons = new JButton[song.getTags().size()];
 		for (int i = 0; i < song.getTags().size(); i++) {
 
@@ -163,5 +218,22 @@ public class SongFrame extends JFrame {
 			genrePanel.repaint();
 
 		}
+	}
+	
+	private void switchToLyrics(){
+		
+		btnLyrics.setVisible(false);
+		songChordsPane.setVisible(false);
+		
+		songLyricPane.setVisible(true);
+		btnChords.setVisible(true);
+	}
+	
+	private void switchToChords(){
+		btnChords.setVisible(false);
+		songLyricPane.setVisible(false);
+		
+		songChordsPane.setVisible(true);
+		btnLyrics.setVisible(true);
 	}
 }

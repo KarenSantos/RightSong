@@ -132,7 +132,7 @@ public class Genre implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Genre: " + getName();
+		return getName();
 	}
 
 }

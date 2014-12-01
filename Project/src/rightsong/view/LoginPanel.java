@@ -25,6 +25,7 @@ public class LoginPanel extends JPanel {
 	private int port;
 	private String host;
 	private Client client;
+	private String loginMsg;
 
 	private MainFrame mainFrame;
 
@@ -130,11 +131,12 @@ public class LoginPanel extends JPanel {
 	}
 
 	public void setLabelErrorFromLogin(String msg) {
+		lblSuccessFromLogin.setText("");
 		lblErrorFromLogin.setText(msg);
-
 	}
 
 	public void setLabelSuccessFromLogin(String msg) {
+		lblErrorFromLogin.setText("");
 		lblSuccessFromLogin.setText(msg);
 	}
 
@@ -162,6 +164,11 @@ public class LoginPanel extends JPanel {
 		lblErrorFromSetHost.setText("");
 	}
 
+	public void reconnect() throws IOException {
+		client = new Client(mainFrame, loginMsg, host, port);
+		mainFrame.setClient(client);
+	}
+
 	private void createEvents() {
 
 		btnLoginFromLogin.addActionListener(new ActionListener() {
@@ -170,39 +177,38 @@ public class LoginPanel extends JPanel {
 				String email = loginTextField.getText();
 				String password = passwordTextField.getText();
 				if (email.equals("")) {
-					lblErrorFromLogin.setText("Please enter your login email.");
+					setLabelErrorFromLogin("Please enter your login email.");
 				} else if (password.equals("")) {
-					lblErrorFromLogin.setText("Please enter a password.");
+					setLabelErrorFromLogin("Please enter a password.");
 				} else {
 					try {
-						client = new Client("#login " + email + " " + password,
-								host, port);
+						loginMsg = "#login " + email + " " + password;
+						client = new Client(mainFrame, loginMsg, host, port);
 						mainFrame.setClient(client);
 
 					} catch (IOException e2) {
-						lblErrorFromLogin
-								.setText("Cannot open connection. Check your internet or host name and try again.");
+						setLabelErrorFromLogin("Cannot open connection. Check your internet or host name and try again.");
 					}
 				}
 			}
 		});
-		
+
 		loginTextField.addKeyListener((new KeyAdapter() {
-	         public void keyPressed(KeyEvent e) {
-	             int key = e.getKeyCode();
-	             if (key == KeyEvent.VK_ENTER) {
-	            	 passwordTextField.requestFocusInWindow();
-	             }
-	         }
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					passwordTextField.requestFocusInWindow();
+				}
+			}
 		}));
-		
+
 		passwordTextField.addKeyListener((new KeyAdapter() {
-	         public void keyPressed(KeyEvent e) {
-	             int key = e.getKeyCode();
-	             if (key == KeyEvent.VK_ENTER) {
-	            	 btnLoginFromLogin.doClick();
-	             }
-	         }
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnLoginFromLogin.doClick();
+				}
+			}
 		}));
 
 		btnRegisterFromLogin.addActionListener(new ActionListener() {
@@ -234,8 +240,8 @@ public class LoginPanel extends JPanel {
 					lblErrorFromRegister.setText("Passwords did not match.");
 				} else {
 					try {
-						client = new Client("#register " + email + " "
-								+ username + " " + password1, host, port);
+						client = new Client(mainFrame, "#register " + email
+								+ " " + username + " " + password1, host, port);
 					} catch (IOException e2) {
 						lblErrorFromRegister
 								.setText("Cannot open connection. Check your internet or host name and try again.");
@@ -243,41 +249,41 @@ public class LoginPanel extends JPanel {
 				}
 			}
 		});
-		
+
 		emailRegisterTextField.addKeyListener((new KeyAdapter() {
-	         public void keyPressed(KeyEvent e) {
-	             int key = e.getKeyCode();
-	             if (key == KeyEvent.VK_ENTER) {
-	            	 usernameRegTextField.requestFocusInWindow();
-	             }
-	         }
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					usernameRegTextField.requestFocusInWindow();
+				}
+			}
 		}));
-		
+
 		usernameRegTextField.addKeyListener((new KeyAdapter() {
-	         public void keyPressed(KeyEvent e) {
-	             int key = e.getKeyCode();
-	             if (key == KeyEvent.VK_ENTER) {
-	            	 passwordReg1TextField.requestFocusInWindow();
-	             }
-	         }
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					passwordReg1TextField.requestFocusInWindow();
+				}
+			}
 		}));
-		
+
 		passwordReg1TextField.addKeyListener((new KeyAdapter() {
-	         public void keyPressed(KeyEvent e) {
-	             int key = e.getKeyCode();
-	             if (key == KeyEvent.VK_ENTER) {
-	            	 passwordReg2TextField.requestFocusInWindow();
-	             }
-	         }
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					passwordReg2TextField.requestFocusInWindow();
+				}
+			}
 		}));
-		
+
 		passwordReg2TextField.addKeyListener((new KeyAdapter() {
-	         public void keyPressed(KeyEvent e) {
-	             int key = e.getKeyCode();
-	             if (key == KeyEvent.VK_ENTER) {
-	            	 btnRegisterFromRegister.doClick();
-	             }
-	         }
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnRegisterFromRegister.doClick();
+				}
+			}
 		}));
 
 		btnOkFromSetHost.addActionListener(new ActionListener() {

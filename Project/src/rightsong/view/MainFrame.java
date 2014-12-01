@@ -1,8 +1,10 @@
 package rightsong.view;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -12,12 +14,13 @@ import javax.swing.JMenuItem;
 
 import rightsong.client.Client;
 import rightsong.client.ClientController;
+import rightsong.model.Song;
 
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	final private int DEFAULT_PORT = 7777;
+	final private int DEFAULT_PORT = 3777;
 	final private String DEFAULT_HOST = "localhost";
 	private String host;
 	private Client client;
@@ -101,6 +104,27 @@ public class MainFrame extends JFrame {
 	public JDesktopPane getDesktopPane2(){
 		return desktopPane2;
 	}
+	
+	public boolean addSong(Song song){
+		boolean answer = false;
+		try {
+			client.sendToServer(song);
+			answer = true;
+		} catch (IOException e) {
+			answer = false;
+			e.printStackTrace();
+		}
+		return answer;
+	}
+	
+	public void clearIndexPanel(){
+		indexPanel.logout();
+		try {
+			loginPanel.reconnect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void initialize() {
 		setResizable(false);
@@ -169,4 +193,22 @@ public class MainFrame extends JFrame {
 		getContentPane().add(indexPanel);
 		indexPanel.setVisible(true);
 	}
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainFrame window = new MainFrame();
+					window.setVisible(true);
+					window.getLoginPanel().setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 }

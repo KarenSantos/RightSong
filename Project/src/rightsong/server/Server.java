@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
+import rightsong.model.Song;
 
 /**
  * This class overrides some of the methods in the abstract superclass in order
@@ -103,24 +104,36 @@ public class Server extends AbstractServer {
 
 			case "#data":
 				try {
-					client.sendToClient(controller.getSongs());
-					client.sendToClient(controller.getTags());
-					client.sendToClient(controller.getGenres());
-					client.sendToClient(controller.getUserRepertories((String)client.getInfo("email")));
-					client.sendToClient(controller.getArtists());
-					client.sendToClient(controller.getChordSheets());
-					client.sendToClient(controller.getChords());
+					Object data = controller.getData((String)client.getInfo("email"));
+					client.sendToClient(data);
 					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				break;
-				
 			
 			default:
 				break;
 			}
 		} else {
+			
+			if(msg instanceof Song){
+				boolean success = controller.addSong((String)client.getInfo("email"), (Song) msg);
+				if(success){
+					try {
+						client.sendToClient("#song added");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						client.sendToClient("#song fail");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
 		}
 	}
 
