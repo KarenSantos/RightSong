@@ -79,7 +79,6 @@ public class ModelTests {
 		
 		assertEquals("id", rep.getId());
 		assertEquals("saturday night", rep.getEventName());
-//		assertEquals("", rep.getDate().);
 		assertEquals("romantic songs", rep.getDescription());
 	}
 	
@@ -143,6 +142,29 @@ public class ModelTests {
 		assertEquals(2, song.getTags().size());
 		assertEquals(song, tag1.getSongs().get(0));
 		assertEquals(song, tag2.getSongs().get(0));
+		
+	}
+	
+	@Test
+	public void userShouldBeAbleToAddGenreToHisSongs(){
+		
+		List<String> lyrics = new ArrayList<String>();
+		lyrics.add("first line of the lyrics");
+		lyrics.add("second line of the lyrics");
+		
+		Song song = new Song("id", "this song", lyrics, SongSpeed.SLOW);
+		
+		user1.addSong(song);
+		
+		Genre genre1 = new Genre("id1", "Rock");
+		Genre genre2 = new Genre("id2", "Pop");
+		
+		user1.addGenreToSong(song, genre1);
+		user1.addGenreToSong(song, genre2);
+		
+		assertEquals(2, song.getTags().size());
+		assertEquals(song, genre1.getSongs().get(0));
+		assertEquals(song, genre2.getSongs().get(0));
 		
 	}
 

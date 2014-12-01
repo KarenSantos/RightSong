@@ -108,22 +108,28 @@ public class Client extends AbstractClient {
 			String command = messages[0];
 
 			switch (command) {
-			case "#success":
-				window.getLoginPanel().switchToLogin();
-				window.getLoginPanel().setLabelSuccessFromLogin(
-						getUsername() + " registered with success!");
+			case "#register":
 
+				if (messages[1].equals("success")) {
+
+					window.getLoginPanel().switchToLogin();
+					window.getLoginPanel().setLabelSuccessFromLogin(
+							getUsername() + " registered with success!");
+				} else if(messages[1].equals("invalidEmail")){
+					window.getLoginPanel().setLabelErrorFromRegister(
+							"This email is already registered.");
+				} else if(messages[1].equals("invalidUsername")){
+					window.getLoginPanel().setLabelErrorFromRegister(
+							"This username is already registered.");
+					clearInfo();
+				}
+				try {
+					sendToServer("#quit");
+					closeConnection();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				break;
-
-			case "#invalidEmail":
-				window.getLoginPanel().setLabelErrorFromRegister(
-						"This email is already registered.");
-				break;
-
-			case "#invalidUsername":
-				window.getLoginPanel().setLabelErrorFromRegister(
-						"This username is already registered.");
-				clearInfo();
 
 			case "#login":
 
@@ -141,14 +147,12 @@ public class Client extends AbstractClient {
 				}
 			case "#song":
 				if (messages[1].equals("added")) {
-					System.out.println("song added received from server");
 					sync = true;
 					try {
 						sendToServer("#data");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-
 				} else {
 				}
 

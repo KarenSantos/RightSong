@@ -29,6 +29,14 @@ public class ServerConsole {
 			System.out.println("ERROR - Could not listen for clients!");
 		}
 	}
+	
+	/**
+	 * Returns the server that was initialized.
+	 * @return The server that was initialized.
+	 */
+	public Server getServer(){
+		return server;
+	}
 
 	/**
 	 * This method is responsible for the creation of the server instance.

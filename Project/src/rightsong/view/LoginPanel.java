@@ -16,6 +16,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import junit.framework.Test;
 import rightsong.client.Client;
 
 public class LoginPanel extends JPanel {

@@ -32,6 +32,15 @@ public class Server extends AbstractServer {
 	}
 
 	/**
+	 * Returns the server controller.
+	 * 
+	 * @return The server controller.
+	 */
+	public ServerController getController() {
+		return controller;
+	}
+
+	/**
 	 * This method handles any messages received from the client.
 	 *
 	 * @param msg
@@ -60,25 +69,25 @@ public class Server extends AbstractServer {
 					controller.addUser(email, username, password);
 
 					try {
-						client.sendToClient("#success");
+						client.sendToClient("#register success");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				} else if (registered.equals("email")) {
 					try {
-						client.sendToClient("#invalidEmail");
+						client.sendToClient("#register invalidEmail");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				} else {
 					try {
-						client.sendToClient("#invalidUsername");
+						client.sendToClient("#register invalidUsername");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 				break;
-				
+
 			case "#login":
 
 				email = info[1];
@@ -104,22 +113,31 @@ public class Server extends AbstractServer {
 
 			case "#data":
 				try {
-					Object data = controller.getData((String)client.getInfo("email"));
+					Object data = controller.getData((String) client
+							.getInfo("email"));
 					client.sendToClient(data);
-					
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				break;
-			
+				
+			case "#quit":
+				try {
+					client.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
 			default:
 				break;
 			}
 		} else {
-			
-			if(msg instanceof Song){
-				boolean success = controller.addSong((String)client.getInfo("email"), (Song) msg);
-				if(success){
+
+			if (msg instanceof Song) {
+				boolean success = controller.addSong(
+						(String) client.getInfo("email"), (Song) msg);
+				if (success) {
 					try {
 						client.sendToClient("#song added");
 					} catch (IOException e) {
@@ -133,7 +151,7 @@ public class Server extends AbstractServer {
 					}
 				}
 			}
-			
+
 		}
 	}
 

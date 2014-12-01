@@ -91,6 +91,21 @@ public class IndexPanel extends JPanel {
 		repaint();
 
 	}
+	
+	public void resetData(){
+		createModelLists();
+		songsList.setModel(mySongsListModel);
+		songsList.revalidate();
+		songsList.repaint();
+		
+		mySongsList.setModel(mySongsListModel);
+		mySongsList.revalidate();
+		mySongsList.repaint();
+		
+		myRepertoriesList.setModel(myRepertoriesListModel);
+		myRepertoriesList.revalidate();
+		myRepertoriesList.repaint();
+	}
 
 	public boolean addSong(Song song) {
 		boolean answer = mainFrame.addSong(song);
