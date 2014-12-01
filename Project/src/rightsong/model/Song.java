@@ -23,13 +23,13 @@ public class Song implements Serializable, Comparable<Song> {
 
 	private List<Artist> artists;
 	private List<ChordSheet> chordSheets;
-	private String youtubeLink;
 	private List<Tag> tags;
 	private List<Genre> genres;
 
 	/**
-	 * Creates a new song with an ID, a title, lyrics and a speed . A song can also have a user who uploaded it, a list of artists, chord sheets,
-	 * tags and genres, and a youtube link.
+	 * Creates a new song with an ID, a title, lyrics and a speed . A song can
+	 * also have a user who uploaded it, a list of artists, chord sheets, tags
+	 * and genres.
 	 * 
 	 * @param id
 	 *            The ID of the song.
@@ -40,8 +40,7 @@ public class Song implements Serializable, Comparable<Song> {
 	 * @param speed
 	 *            The speed of the song.
 	 */
-	public Song(String id, String title, List<String> lyrics,
-			SongSpeed speed) {
+	public Song(String id, String title, List<String> lyrics, SongSpeed speed) {
 		this.id = id;
 		this.title = title;
 		this.lyrics = lyrics;
@@ -49,7 +48,6 @@ public class Song implements Serializable, Comparable<Song> {
 
 		this.artists = new ArrayList<Artist>();
 		this.chordSheets = new ArrayList<ChordSheet>();
-		this.youtubeLink = "no link available";
 		this.tags = new ArrayList<Tag>();
 		this.genres = new ArrayList<Genre>();
 	}
@@ -218,25 +216,6 @@ public class Song implements Serializable, Comparable<Song> {
 	}
 
 	/**
-	 * Returns the youtube link of the song.
-	 * 
-	 * @return The youtube link of the song.
-	 */
-	public String getYoutubeLink() {
-		return youtubeLink;
-	}
-
-	/**
-	 * Sets a new youtube link for the song.
-	 * 
-	 * @param youtubeLink
-	 *            The new youtube link of the song.
-	 */
-	public void setYoutubeLink(String youtubeLink) {
-		this.youtubeLink = youtubeLink;
-	}
-
-	/**
 	 * Returns the list of tags of the song.
 	 * 
 	 * @return The list of tags of the song.
@@ -310,7 +289,7 @@ public class Song implements Serializable, Comparable<Song> {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
+
 	/**
 	 * Compares songs according to their titles.
 	 */

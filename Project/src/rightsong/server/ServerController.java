@@ -40,15 +40,23 @@ public class ServerController {
 		artists = new ArrayList<Artist>();
 		chordSheets = new ArrayList<ChordSheet>();
 		chords = new ArrayList<Chord>();
-		
+
 		admin = addUser("admin", "admin", "admin");
 
 		initializeSampleDataBase();
 	}
-	
-	public List<List<?>> getData(String email){
+
+	/**
+	 * Returns all the data from the domain model stored in the server
+	 * controller.
+	 * 
+	 * @param email
+	 *            The email of the user the data will be from.
+	 * @return All the data stored in this server controller.
+	 */
+	public List<List<?>> getData(String email) {
 		List<List<?>> data = new ArrayList<List<?>>();
-		
+
 		data.add(getSongs());
 		data.add(getTags());
 		data.add(getGenres());
@@ -131,41 +139,64 @@ public class ServerController {
 		return songs;
 	}
 
+	/**
+	 * Adds a song to a users and the system database.
+	 * 
+	 * @param email
+	 *            The email of the user the song will be added to.
+	 * @param song
+	 *            The song to be added.
+	 * @return True if the song was added.
+	 */
 	public boolean addSong(String email, Song song) {
 		String id = "song" + getSongs().size() + 1;
-		Song newSong = new Song(id, song.getTitle(), song.getLyrics(), song.getSpeed());
-		
-		if(!song.getArtists().isEmpty()){
-			for (Artist a : song.getArtists()){
+		Song newSong = new Song(id, song.getTitle(), song.getLyrics(),
+				song.getSpeed());
+
+		if (!song.getArtists().isEmpty()) {
+			for (Artist a : song.getArtists()) {
 				newSong.addArtist(createArtist(a.getName()));
 			}
 		}
-		
-		for (Genre g : song.getGenres()){
+
+		for (Genre g : song.getGenres()) {
 			newSong.addGenre(g);
 		}
-		for (Tag t : song.getTags()){
+		for (Tag t : song.getTags()) {
 			newSong.addTag(t);
 		}
-		
+
 		User user = getUserByEmail(email);
 		user.addSong(newSong);
 		songs.add(newSong);
 		return true;
 	}
 
+	/**
+	 * Returns all the tags from this server controller.
+	 * 
+	 * @return All the tags from this server controller.
+	 */
 	public List<Tag> getTags() {
 		return tags;
 	}
-	
-	public Tag createTag(String name){
+
+	/**
+	 * Creates a new tag.
+	 * 
+	 * @param name
+	 *            The name of the tag to be created.
+	 * @return The tag that was created or that already existed with the same
+	 *         name.
+	 */
+	public Tag createTag(String name) {
 		Tag tag = null;
-		for(Tag t : getTags()){
-			if(t.getName().equals(name)){
+		for (Tag t : getTags()) {
+			if (t.getName().equals(name)) {
 				tag = t;
 				break;
 			}
-		} 
+		}
 		if (tag == null) {
 			String id = "tag" + getTags().size() + 1;
 			tag = new Tag(id, name);
@@ -173,23 +204,46 @@ public class ServerController {
 		tags.add(tag);
 		return tag;
 	}
-	
+
+	/**
+	 * Adds a tag to the song of the specified user.
+	 * 
+	 * @param user
+	 *            The user that uploaded the song.
+	 * @param song
+	 *            The song uploaded by this user.
+	 * @param tag
+	 *            The tag to be added to the song.
+	 */
 	public void addTagToSong(User user, Song song, Tag tag) {
 		user.addTagToSong(song, tag);
 	}
 
-	public List<Genre> getGenres(){
+	/**
+	 * Returns all the genres from this server controller.
+	 * 
+	 * @return All the genres from this server controller.
+	 */
+	public List<Genre> getGenres() {
 		return genres;
 	}
-	
-	public Genre createGenre(String name){
+
+	/**
+	 * Creates a new genre.
+	 * 
+	 * @param name
+	 *            The name of the genre to be created.
+	 * @return The genre that was created or that already existed with the same
+	 *         name.
+	 */
+	public Genre createGenre(String name) {
 		Genre genre = null;
-		for(Genre g : getGenres()){
-			if(g.getName().equals(name)){
+		for (Genre g : getGenres()) {
+			if (g.getName().equals(name)) {
 				genre = g;
 				break;
 			}
-		} 
+		}
 		if (genre == null) {
 			String id = "genre" + getGenres().size() + 1;
 			genre = new Genre(id, name);
@@ -198,34 +252,63 @@ public class ServerController {
 		return genre;
 	}
 
-	public void addGenreToSong(User user, Song song, String genreName) {
-		// TODO check if the tag already exists
-		String id = "genre" + getGenres().size() + 1;
-		Genre genre = new Genre(id, genreName);
+	/**
+	 * Adds a genre to the song of the specified user.
+	 * 
+	 * @param user
+	 *            The user that uploaded the song.
+	 * @param song
+	 *            The song uploaded by this user.
+	 * @param genre
+	 *            The genre to be added to the song.
+	 */
+	public void addGenreToSong(User user, Song song, Genre genre) {
 		user.addGenreToSong(song, genre);
-		genres.add(genre);
 	}
-	
-	public List<Repertory> getRepertories(){
+
+	/**
+	 * Returns all the repertories from this server controller.
+	 * 
+	 * @return All the repertories from this server controller.
+	 */
+	public List<Repertory> getRepertories() {
 		return repertories;
 	}
-	
-	public List<Repertory> getUserRepertories(String email){
+
+	/**
+	 * Returns all the repertories from the user with the specified email.
+	 * 
+	 * @return All the repertories from the user with the specified email.
+	 */
+	public List<Repertory> getUserRepertories(String email) {
 		return getUserByEmail(email).getRepertories();
 	}
-	
-	public List<Artist> getArtists(){
+
+	/**
+	 * Returns all the artists from this server controller.
+	 * 
+	 * @return All the artists from this server controller.
+	 */
+	public List<Artist> getArtists() {
 		return artists;
 	}
-	
-	public Artist createArtist(String name){
+
+	/**
+	 * Creates a new artist.
+	 * 
+	 * @param name
+	 *            The name of the artist to be created.
+	 * @return The artist that was created or that already existed with the same
+	 *         name.
+	 */
+	public Artist createArtist(String name) {
 		Artist artist = null;
-		for(Artist a : getArtists()){
-			if(a.getName().equals(name)){
+		for (Artist a : getArtists()) {
+			if (a.getName().equals(name)) {
 				artist = a;
 				break;
 			}
-		} 
+		}
 		if (artist == null) {
 			String id = "artist" + getArtists().size() + 1;
 			artist = new Artist(id, name);
@@ -233,12 +316,22 @@ public class ServerController {
 		artists.add(artist);
 		return artist;
 	}
-	
-	public List<ChordSheet> getChordSheets(){
+
+	/**
+	 * Returns all the chord sheets from this server controller.
+	 * 
+	 * @return All the chord sheets from this server controller.
+	 */
+	public List<ChordSheet> getChordSheets() {
 		return chordSheets;
 	}
-	
-	public List<Chord> getChords(){
+
+	/**
+	 * Returns all the chords from this server controller.
+	 * 
+	 * @return All the chords from this server controller.
+	 */
+	public List<Chord> getChords() {
 		return chords;
 	}
 
@@ -274,18 +367,28 @@ public class ServerController {
 	public boolean isUser(String email, String password) {
 		boolean answer = false;
 		User user = getUserByEmail(email);
-		if (user != null){
+		if (user != null) {
 			if (user.getPassword().equals(password)) {
 				answer = true;
 			}
 		}
 		return answer;
 	}
-	
-	public boolean isAdmin(String email){
+
+	/**
+	 * Returns if the email is the administrator's email.
+	 * 
+	 * @param email
+	 *            The email to be checked.
+	 * @return True if the email is the administrator's email.
+	 */
+	public boolean isAdmin(String email) {
 		return email.equals(admin.getEmail());
 	}
 
+	/**
+	 * Initializes a sample database.
+	 */
 	private void initializeSampleDataBase() {
 
 		String email = "firstUser@email.com";
@@ -294,17 +397,17 @@ public class ServerController {
 		List<String> lyrics = new ArrayList<String>();
 		lyrics.add("First line of the song");
 		lyrics.add("This will be the second line of music");
-		
+
 		Song song = new Song("id", "My First Song", lyrics, SongSpeed.MODERATE);
-		
+
 		song.addTag(createTag("Romantic"));
 		song.addTag(createTag("Chill"));
 		song.addTag(createTag("Instrumental"));
 		song.addTag(createTag("Happy"));
-		
+
 		song.addGenre(createGenre("Rock"));
 		song.addGenre(createGenre("Jazz"));
-		
+
 		addSong(email, song);
 	}
 }

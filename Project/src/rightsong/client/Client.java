@@ -14,6 +14,9 @@ import rightsong.view.MainFrame;
  */
 public class Client extends AbstractClient {
 
+	/**
+	 * The UI main frame.
+	 */
 	private MainFrame window;
 
 	private String username;
@@ -163,27 +166,6 @@ public class Client extends AbstractClient {
 					}
 				}
 			}
-		}
-	}
-
-	/**
-	 * This method handles all data coming from the UI
-	 *
-	 * @param message
-	 *            The message from the UI.
-	 * @throws IOException
-	 *             If the message could not be sent to the server.
-	 */
-	public void handleMessageFromClientUI(String message) throws IOException {
-
-		if (message.startsWith("#login")) {
-
-			sendToServer(message);
-			System.out
-					.println("Could not send message to server. Terminating client.");
-			quit();
-		} else {
-
 		}
 	}
 

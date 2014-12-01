@@ -1,10 +1,8 @@
 package rightsong.server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 /**
- * This class constructs the UI for a Server.
+ * This class constructs a Server.
  *
  * @author Karen Santos
  * @version November 2014
@@ -33,26 +31,6 @@ public class ServerConsole {
 	}
 
 	/**
-	 * This method waits for input from the console. Once it is received, it
-	 * sends it to the server's message handler.
-	 */
-	public void accept() {
-		try {
-			BufferedReader fromConsole = new BufferedReader(
-					new InputStreamReader(System.in));
-			String message;
-
-			while (true) {
-				message = fromConsole.readLine();
-//				server.handleMessageFromServerUI(message);
-			}
-		} catch (Exception ex) {
-			System.out
-					.println("Unexpected error while reading from console in the server!");
-		}
-	}
-
-	/**
 	 * This method is responsible for the creation of the server instance.
 	 *
 	 * @param args
@@ -60,16 +38,9 @@ public class ServerConsole {
 	 *            argument is entered.
 	 */
 	public static void main(String[] args) {
-		int port = 0; // Port to listen on
 
-		try {
-			port = Integer.parseInt(args[0]); // Get port from command line
-		} catch (Throwable t) {
-			port = DEFAULT_PORT; // Set port to 7777
-		}
-
-		ServerConsole sc = new ServerConsole(port);
-//		sc.accept(); // Wait for console data
+		@SuppressWarnings("unused")
+		ServerConsole sc = new ServerConsole(DEFAULT_PORT);
 
 	}
 }

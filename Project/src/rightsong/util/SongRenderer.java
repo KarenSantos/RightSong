@@ -8,6 +8,12 @@ import javax.swing.ListCellRenderer;
 
 import rightsong.model.Song;
 
+/**
+ * Song Renderer to display songs in a list.
+ * 
+ * @author karensantos
+ *
+ */
 public class SongRenderer extends JLabel implements ListCellRenderer<Song> {
 
 	private static final long serialVersionUID = 1L;
@@ -24,12 +30,13 @@ public class SongRenderer extends JLabel implements ListCellRenderer<Song> {
 			Song song, int index, boolean isSelected, boolean cellHasFocus) {
 
 		String text = "<html>&nbsp;&nbsp;<font size='4'>";
-		if (song.getTitle().length() > MAX_CHAR){
+		if (song.getTitle().length() > MAX_CHAR) {
 			text += song.getTitle().substring(0, MAX_CHAR) + "...";
 		} else {
 			text += song.getTitle();
 		}
-		text +=  "</font><br>" + "<font size='2'>&nbsp;&nbsp;from " + song.getUser() + "</font></html>";
+		text += "</font><br>" + "<font size='2'>&nbsp;&nbsp;from "
+				+ song.getUser() + "</font></html>";
 
 		setText(text);
 		setFont(list.getFont());

@@ -173,7 +173,7 @@ public class User implements Serializable {
 	 * Adds a tag to the song uploaded by this user.
 	 * 
 	 * @param song
-	 *            The song the tags will be added to.
+	 *            The song the tag will be added to.
 	 * @param tag
 	 *            The tag to be added to the song.
 	 */
@@ -188,7 +188,7 @@ public class User implements Serializable {
 	 * Deletes a tag from the song uploaded by this user.
 	 * 
 	 * @param song
-	 *            The song the tags will be deleted from.
+	 *            The song the tag will be deleted from.
 	 * @param tag
 	 *            The tag to be removed from the song tags.
 	 */
@@ -198,8 +198,15 @@ public class User implements Serializable {
 			tag.deleteSong(song);
 		}
 	}
-	
 
+	/**
+	 * Adds a genre to the song uploaded by this user.
+	 * 
+	 * @param song
+	 *            The song the genre will be added to.
+	 * @param genre
+	 *            The genre to be added to the song.
+	 */
 	public void addGenreToSong(Song song, Genre genre) {
 		if (isMySong(song) || getEmail().equals("admin")) {
 			song.addGenre(genre);
@@ -207,8 +214,6 @@ public class User implements Serializable {
 		}
 	}
 
-	//TODO deleteGenreFromSong
-	
 	/**
 	 * Returns the list of chord sheets uploaded by this user.
 	 * 

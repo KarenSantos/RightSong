@@ -8,6 +8,12 @@ import javax.swing.ListCellRenderer;
 
 import rightsong.model.Repertory;
 
+/**
+ * Repertory Renderer to display repertories in a list.
+ * 
+ * @author karensantos
+ *
+ */
 public class RepertoryRenderer extends JLabel implements ListCellRenderer<Repertory> {
 
 	private static final long serialVersionUID = 1L;

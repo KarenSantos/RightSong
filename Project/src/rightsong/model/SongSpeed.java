@@ -9,7 +9,8 @@ package rightsong.model;
  */
 public enum SongSpeed {
 
-	VERY_SLOW("Very slow"), SLOW("Slow"), MODERATE("Moderate"), FAST("Fast"), VERY_FAST("Very fast");
+	VERY_SLOW("Very slow"), SLOW("Slow"), MODERATE("Moderate"), FAST("Fast"), VERY_FAST(
+			"Very fast");
 
 	private String speed;
 
@@ -30,7 +31,10 @@ public enum SongSpeed {
 	public String getName() {
 		return speed;
 	}
-	
+
+	/**
+	 * Returns a string with the Song speed name.
+	 */
 	@Override
 	public String toString() {
 		return getName();
