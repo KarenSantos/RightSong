@@ -1,167 +1,183 @@
 package rightsong.view;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
 import rightsong.client.ClientController;
-import rightsong.model.*;
-import rightsong.util.*;
-
-import java.awt.SystemColor;
-
-import javax.swing.JList;
-import javax.swing.SwingConstants;
+import rightsong.model.Repertory;
+import rightsong.model.Song;
+import rightsong.util.RepertoryRenderer;
+import rightsong.util.SongRenderer;
 
 public class IndexPanel extends JPanel {
-	
+
 	private static final long serialVersionUID = 1L;
 
+	private MainFrame mainFrame;
 	private ClientController controller;
-	
+	private MessageFrame alert;
+
 	private JPanel searchArea;
 	private JPanel menuArea;
-	private JPanel songArea;
 	private JScrollPane songsPane;
 	private JScrollPane mySongsPane;
-	private JScrollPane artistsPane;
 	private JScrollPane myRepertoriesPane;
-	private JPanel emptyListPane;
-	
+
 	private JPanel tagsPanel;
 	private JPanel genrePanel;
 	private JPanel speedPanel;
-	
+
 	private JTextField searchTextField;
-	
-	private JButton btnAllSongs;
-	private JButton btnMySongs;
 	private JButton btnUploadSong;
-	private JButton btnMyRepertories;
 	private JButton btnNewRepertory;
-	private JButton btnArtists;
 	private JButton btnSync;
 	private JButton btnLogout;
-	
+
 	private JList<Song> songsList;
 	private JList<Song> mySongsList;
-	private JList<Artist> artistsList;
 	private JList<Repertory> myRepertoriesList;
 	private DefaultListModel<Song> songsListModel;
 	private DefaultListModel<Song> mySongsListModel;
-	private DefaultListModel<Artist> artistsListModel;
 	private DefaultListModel<Repertory> myRepertoriesListModel;
-	private JLabel lblEmptyList;
+
+	private JLabel lblNoSongs;
+	private JLabel lblNoMySongs;
+	private JLabel lblNoMyRepertories;
 
 	/**
 	 * Create the panel.
 	 */
-	public IndexPanel(ClientController controller) {
+	public IndexPanel(MainFrame mainFrame, ClientController controller) {
+		this.mainFrame = mainFrame;
 		this.controller = controller;
-		
+
 		initialize();
 		organizeSearchArea();
 		organizeMenuArea();
 		createEvents();
 
 	}
-	
-	public void setData(){
-		
+
+	public void setData() {
+
 		createTagButtons();
 		createGenreButtons();
 		createSpeedButtons();
 		createModelLists();
 		createLists();
-		songsPane.setVisible(true);
-		revalidate();
-		repaint();
-		
+		createListsEvents();
+
 	}
-	
+
 	private void createTagButtons() {
 		JButton[] tagButtons = new JButton[controller.getTags().size()];
-		
-		for (int i = 0; i < controller.getTags().size(); i++){
-			
+
+		for (int i = 0; i < controller.getTags().size(); i++) {
+
 			tagButtons[i] = new JButton(controller.getTags().get(i).getName());
 			tagButtons[i].setBounds(0, 0, 10, 10);
 			tagButtons[i].setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 			tagsPanel.add(tagButtons[i]);
 			tagsPanel.revalidate();
 			tagsPanel.repaint();
-			
+
 		}
 	}
-	
+
 	private void createGenreButtons() {
 		JButton[] genreButtons = new JButton[controller.getGenres().size()];
-		
-		for (int i = 0; i < controller.getGenres().size(); i++){
-			
-			genreButtons[i] = new JButton(controller.getGenres().get(i).getName());
+
+		for (int i = 0; i < controller.getGenres().size(); i++) {
+
+			genreButtons[i] = new JButton(controller.getGenres().get(i)
+					.getName());
 			genreButtons[i].setBounds(0, 0, 10, 10);
 			genreButtons[i].setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 			genrePanel.add(genreButtons[i]);
 			genrePanel.revalidate();
 			genrePanel.repaint();
-			
+
 		}
 	}
-	
+
 	private void createSpeedButtons() {
 		JButton[] speedButtons = new JButton[controller.getSpeeds().size()];
-		
-		for (int i = 0; i < controller.getSpeeds().size(); i++){
-			
-			speedButtons[i] = new JButton(controller.getSpeeds().get(i).getName());
+
+		for (int i = 0; i < controller.getSpeeds().size(); i++) {
+
+			speedButtons[i] = new JButton(controller.getSpeeds().get(i)
+					.getName());
 			speedButtons[i].setBounds(0, 0, 10, 10);
 			speedButtons[i].setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 			speedPanel.add(speedButtons[i]);
 			speedPanel.revalidate();
 			speedPanel.repaint();
-			
+
 		}
 	}
-	
-	private void createModelLists(){
-		
+
+	private void createModelLists() {
+
 		songsListModel = new DefaultListModel<Song>();
-		for (Song s : controller.getSongs()){
+		for (Song s : controller.getSongs()) {
 			songsListModel.addElement(s);
 		}
-		
+
 		mySongsListModel = new DefaultListModel<Song>();
-		for (Song s : controller.getMySongs()){
+		for (Song s : controller.getMySongs()) {
 			mySongsListModel.addElement(s);
 		}
-		
-		artistsListModel = new DefaultListModel<Artist>();
-		for (Artist a : controller.getArtists()){
-			artistsListModel.addElement(a);
-		}
-		
+
 		myRepertoriesListModel = new DefaultListModel<Repertory>();
-		for (Repertory r : controller.getMyRepertories()){
+		for (Repertory r : controller.getMyRepertories()) {
 			myRepertoriesListModel.addElement(r);
 		}
-		
+
 	}
-	
-	private void createLists(){
-		
+
+	private void createLists() {
+
+		lblNoSongs = new JLabel("There are no uploaded songs.");
+		lblNoSongs.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNoSongs.setFont(new Font("Lucida Grande", Font.ITALIC, 12));
+		lblNoSongs.setBounds(164, 350, 228, 16);
+		add(lblNoSongs);
+		setVisible(false);
+
+		lblNoMySongs = new JLabel("You have no uploaded songs.");
+		lblNoMySongs.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNoMySongs.setFont(new Font("Lucida Grande", Font.ITALIC, 12));
+		lblNoMySongs.setBounds(404, 350, 228, 16);
+		add(lblNoMySongs);
+		setVisible(false);
+
+		lblNoMyRepertories = new JLabel("You have no repertories.");
+		lblNoMyRepertories.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNoMyRepertories.setFont(new Font("Lucida Grande", Font.ITALIC, 12));
+		lblNoMyRepertories.setBounds(643, 350, 228, 16);
+		add(lblNoMyRepertories);
+		setVisible(false);
+
 		songsList = new JList<Song>(songsListModel);
 		SongRenderer songRenderer = new SongRenderer();
 		songsList.setCellRenderer(songRenderer);
@@ -175,7 +191,7 @@ public class IndexPanel extends JPanel {
 		songsList.setFixedCellWidth(227);
 		songsList.setVisibleRowCount(-1);
 		songsPane.setRowHeaderView(songsList);
-		
+
 		mySongsList = new JList<Song>(mySongsListModel);
 		mySongsList.setCellRenderer(songRenderer);
 		mySongsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -188,21 +204,7 @@ public class IndexPanel extends JPanel {
 		mySongsList.setFixedCellWidth(227);
 		mySongsList.setVisibleRowCount(-1);
 		mySongsPane.setRowHeaderView(mySongsList);
-		
-		artistsList = new JList<Artist>(artistsListModel);
-		ArtistRenderer artistRenderer = new ArtistRenderer();
-		artistsList.setCellRenderer(artistRenderer);
-		artistsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		artistsList.setLayoutOrientation(JList.VERTICAL);
-		artistsList.setLayout(null);
-		artistsList.setSelectionBackground(Color.LIGHT_GRAY);
-		artistsList.setBackground(Color.WHITE);
-		artistsList.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		artistsList.setFixedCellHeight(37);
-		artistsList.setFixedCellWidth(227);
-		artistsList.setVisibleRowCount(-1);
-		artistsPane.setRowHeaderView(artistsList);
-		
+
 		myRepertoriesList = new JList<Repertory>(myRepertoriesListModel);
 		RepertoryRenderer repertoryRenderer = new RepertoryRenderer();
 		myRepertoriesList.setCellRenderer(repertoryRenderer);
@@ -216,263 +218,199 @@ public class IndexPanel extends JPanel {
 		myRepertoriesList.setFixedCellWidth(227);
 		myRepertoriesList.setVisibleRowCount(-1);
 		myRepertoriesPane.setRowHeaderView(myRepertoriesList);
-		
+
+		if (songsListModel.isEmpty()) {
+			lblNoSongs.setVisible(true);
+		}
+		if (mySongsListModel.isEmpty()) {
+			lblNoMySongs.setVisible(true);
+		}
+		if (myRepertoriesListModel.isEmpty()) {
+			lblNoMyRepertories.setVisible(true);
+		}
 	}
-	
-	private void createEvents(){
-		btnAllSongs.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if(songsListModel.isEmpty()){
-					lblEmptyList.setText("There are no uploaded songs.");
-					switchToEmptyList();
-				} else {
-					switchToSongs();
+
+	private void createListsEvents() {
+
+		songsList.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								int songIndex = songsList.getSelectedIndex();
+								SongFrame frame = new SongFrame(controller
+										.getSongs().get(songIndex));
+								frame.setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
 				}
 			}
 		});
-		
-		btnMySongs.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if(mySongsListModel.isEmpty()){
-					lblEmptyList.setText("You have no uploaded songs.");
-					switchToEmptyList();
-				} else {
-					switchToMySongs();
-				}
-			}
-		});
-		
+
+	}
+
+	private void createEvents() {
+
 		btnUploadSong.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+
 			}
 		});
-		
-		btnMyRepertories.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if(myRepertoriesListModel.isEmpty()){
-					lblEmptyList.setText("You have no repertories.");
-					switchToEmptyList();
-				} else {
-					switchToMyRepertories();
-				}
-			}
-		});
-		
+
 		btnNewRepertory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		});
-		
-		btnArtists.addActionListener(new ActionListener() {
+
+		btnSync.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				if(artistsListModel.isEmpty()){
-					lblEmptyList.setText("There are no uploaded artists.");
-					switchToEmptyList();
-				} else {
-					switchToArtists();
+				try {
+					mainFrame.getClient().sendToServer("data");
+				} catch (IOException e1) {
+					if (alert == null || alert.isClosed()) {
+						alert = new MessageFrame(mainFrame.getDesktopPane1());
+						alert.setMessage("Unable to connecto to the server at this time. Try again later.");
+					}
 				}
 			}
 		});
-		
-		btnSync.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				
-			}
-		});
-		
+
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
+				try {
+					mainFrame.getClient().closeConnection();
+					mainFrame.switchToLoginPanel();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
+
 	}
-	
-	private void initialize(){
-		
+
+	private void initialize() {
+
 		setBounds(6, 6, 888, 616);
 		setBackground(Color.WHITE);
 		setLayout(null);
-		
+
 		searchArea = new JPanel();
 		searchArea.setBounds(6, 29, 876, 159);
-		searchArea.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		searchArea.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null,
+				null, null));
 		searchArea.setBackground(SystemColor.window);
 		add(searchArea);
 		searchArea.setLayout(null);
-		
+
 		menuArea = new JPanel();
 		menuArea.setBounds(6, 194, 146, 416);
 		menuArea.setBorder(null);
 		menuArea.setBackground(Color.WHITE);
 		add(menuArea);
 		menuArea.setLayout(null);
-		
+
 		songsPane = new JScrollPane();
-		songsPane.setBounds(159, 193, 228, 416);
-		songsPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		songsPane.setBackground(SystemColor.window);
+		songsPane.setToolTipText("");
+		songsPane.setBounds(164, 218, 228, 392);
 		add(songsPane);
-		
+		songsPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null,
+				null, null));
+		songsPane.setBackground(SystemColor.window);
+
 		mySongsPane = new JScrollPane();
-		mySongsPane.setBounds(159, 193, 228, 416);
-		mySongsPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		mySongsPane.setBounds(404, 218, 228, 392);
+		mySongsPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null,
+				null, null));
 		add(mySongsPane);
-		
-		artistsPane = new JScrollPane();
-		artistsPane.setBounds(159, 193, 228, 416);
-		artistsPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		add(artistsPane);
-		
+
 		myRepertoriesPane = new JScrollPane();
-		myRepertoriesPane.setBounds(159, 193, 228, 416);
-		myRepertoriesPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		myRepertoriesPane.setBounds(643, 218, 228, 416);
+		myRepertoriesPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null,
+				null, null, null));
 		add(myRepertoriesPane);
-		
-		emptyListPane = new JPanel();
-		emptyListPane.setLayout(null);
-		emptyListPane.setBounds(159, 193, 228, 416);
-		emptyListPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		emptyListPane.setBackground(SystemColor.window);
-		add(emptyListPane);
-		
-		lblEmptyList = new JLabel("");
-		lblEmptyList.setBounds(0, 170, 228, 20);
-		lblEmptyList.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEmptyList.setFont(new Font("Lucida Grande", Font.ITALIC, 12));
-		emptyListPane.add(lblEmptyList);
-		
-		songArea = new JPanel();
-		songArea.setBounds(395, 194, 487, 416);
-		add(songArea);
-		
+
+		JLabel lblAllSongs = new JLabel("All Songs");
+		lblAllSongs.setFont(new Font("Lucida Grande", Font.BOLD, 14));
+		lblAllSongs.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAllSongs.setBounds(164, 194, 228, 23);
+		add(lblAllSongs);
+
+		JLabel lblMySongs = new JLabel("My Songs");
+		lblMySongs.setFont(new Font("Lucida Grande", Font.BOLD, 14));
+		lblMySongs.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMySongs.setBounds(404, 190, 228, 27);
+		add(lblMySongs);
+
+		JLabel lblMyRepertories = new JLabel("My Repertories");
+		lblMyRepertories.setFont(new Font("Lucida Grande", Font.BOLD, 14));
+		lblMyRepertories.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMyRepertories.setBounds(643, 190, 228, 27);
+		add(lblMyRepertories);
+
 	}
-	
-	private void organizeSearchArea(){
-		
+
+	private void organizeSearchArea() {
+
 		JLabel iconSearch = new JLabel("");
-		iconSearch.setIcon(new ImageIcon(IndexPanel.class.getResource("/rightsong/resources/searchIcon.png")));
+		iconSearch.setIcon(new ImageIcon(IndexPanel.class
+				.getResource("/rightsong/resources/searchIcon.png")));
 		iconSearch.setBounds(6, 0, 57, 50);
 		searchArea.add(iconSearch);
-		
+
 		searchTextField = new JTextField();
 		searchTextField.setBounds(59, 9, 299, 34);
 		searchArea.add(searchTextField);
 		searchTextField.setColumns(10);
-		
+
 		JButton btnSearch = new JButton("Search");
 		btnSearch.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		btnSearch.setBounds(358, 12, 90, 29);
 		searchArea.add(btnSearch);
-		
+
 		tagsPanel = new JPanel();
 		tagsPanel.setBackground(Color.WHITE);
 		tagsPanel.setBounds(6, 50, 399, 73);
 		searchArea.add(tagsPanel);
 		tagsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
+
 		genrePanel = new JPanel();
 		genrePanel.setBackground(Color.WHITE);
 		genrePanel.setBounds(412, 50, 253, 73);
 		searchArea.add(genrePanel);
-		
+
 		speedPanel = new JPanel();
 		speedPanel.setBackground(Color.WHITE);
 		speedPanel.setBounds(670, 50, 200, 73);
 		searchArea.add(speedPanel);
+
 	}
-	
-	private void organizeMenuArea(){
-		
-		btnAllSongs = new JButton("All Songs");
-		btnAllSongs.setBounds(6, 6, 133, 33);
-		btnAllSongs.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		menuArea.add(btnAllSongs);
-		
-		btnMySongs = new JButton("My Songs");
-		btnMySongs.setBounds(6, 47, 133, 33);
-		btnMySongs.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		menuArea.add(btnMySongs);
-		
+
+	private void organizeMenuArea() {
+
 		btnUploadSong = new JButton("Upload Song");
-		btnUploadSong.setBounds(6, 88, 133, 33);
+		btnUploadSong.setBounds(6, 10, 133, 33);
 		btnUploadSong.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		menuArea.add(btnUploadSong);
-		
-		btnMyRepertories = new JButton("My Repertories");
-		btnMyRepertories.setBounds(6, 129, 133, 33);
-		btnMyRepertories.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		menuArea.add(btnMyRepertories);
-		
+
 		btnNewRepertory = new JButton("New Repertory");
-		btnNewRepertory.setBounds(6, 170, 133, 33);
+		btnNewRepertory.setBounds(6, 55, 133, 33);
 		btnNewRepertory.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		menuArea.add(btnNewRepertory);
-		
-		btnArtists = new JButton("Artists");
-		btnArtists.setBounds(6, 211, 133, 33);
-		btnArtists.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		menuArea.add(btnArtists);
-		
+
 		btnSync = new JButton("Sync");
-		btnSync.setBounds(6, 252, 133, 33);
+		btnSync.setBounds(6, 100, 133, 33);
 		btnSync.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		menuArea.add(btnSync);
-		
+
 		btnLogout = new JButton("Logout");
-		btnLogout.setBounds(6, 293, 133, 33);
+		btnLogout.setBounds(6, 377, 133, 33);
 		btnLogout.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
 		menuArea.add(btnLogout);
-	}
-	
-	private void switchToSongs(){
-		mySongsPane.setVisible(false);
-		artistsPane.setVisible(false);
-		myRepertoriesPane.setVisible(false);
-		emptyListPane.setVisible(false);
-		
-		songsPane.setVisible(true);
-	}
-	
-	private void switchToMySongs(){
-		songsPane.setVisible(false);
-		artistsPane.setVisible(false);
-		myRepertoriesPane.setVisible(false);
-		emptyListPane.setVisible(false);
-		
-		mySongsPane.setVisible(true);
-	}
-	
-	private void switchToArtists(){
-		songsPane.setVisible(false);
-		mySongsPane.setVisible(false);
-		myRepertoriesPane.setVisible(false);
-		emptyListPane.setVisible(false);
-		
-		artistsPane.setVisible(true);
-	}
-	
-	private void switchToMyRepertories(){
-		songsPane.setVisible(false);
-		mySongsPane.setVisible(false);
-		artistsPane.setVisible(false);
-		emptyListPane.setVisible(false);
-		
-		myRepertoriesPane.setVisible(true);
-	}
-	
-	private void switchToEmptyList(){
-		songsPane.setVisible(false);
-		mySongsPane.setVisible(false);
-		artistsPane.setVisible(false);
-		myRepertoriesPane.setVisible(false);
-		
-		emptyListPane.setVisible(true);
 	}
 }

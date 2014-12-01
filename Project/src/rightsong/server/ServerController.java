@@ -245,7 +245,7 @@ public class ServerController {
 		lyrics.add("First line of the song");
 		lyrics.add("This will be the second line of music");
 		
-		Song song = addSong(user, "My First Song bla balbla bla", lyrics, SongSpeed.MODERATE);
+		Song song = addSong(user, "My First Song", lyrics, SongSpeed.MODERATE);
 
 		for (String tagName : tagNames) {
 			addTagToSong(user, song, tagName);

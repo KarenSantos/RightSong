@@ -65,6 +65,7 @@ public class MainFrame extends JFrame {
 		indexPanel.setVisible(false);
 
 		setHostMenu.setVisible(true);
+		loginPanel.clearLoginForm();
 		loginPanel.setVisible(true);
 	}
 
@@ -163,7 +164,7 @@ public class MainFrame extends JFrame {
 
 	private void createIndexPanel() {
 
-		indexPanel = new IndexPanel(controller);
+		indexPanel = new IndexPanel(this, controller);
 		indexPanel.setBounds(0, 0, 888, 616);
 		getContentPane().add(indexPanel);
 		indexPanel.setVisible(true);

@@ -113,11 +113,10 @@ public class Client extends AbstractClient {
 				
 				if(messages[1].equals("ok")){
 					
-					window.getLoginPanel().setVisible(false);
-					window.getIndexPanel().setVisible(true);
-					
 					try {
 						sendToServer("#data");
+						window.getLoginPanel().setVisible(false);
+						window.getIndexPanel().setVisible(true);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
