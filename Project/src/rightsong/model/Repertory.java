@@ -9,6 +9,7 @@ import java.util.List;
  * Repertory class.
  * 
  * @author Karen Santos
+ * @author Jolayemioluwa Ilori
  * @version November 2014
  *
  */

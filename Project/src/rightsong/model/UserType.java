@@ -4,6 +4,7 @@ package rightsong.model;
  * User type enumeration class.
  * 
  * @author Karen Santos
+ * @author Jolayemioluwa Ilori
  * @version November 2014
  *
  */

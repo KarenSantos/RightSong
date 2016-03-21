@@ -12,6 +12,7 @@ import rightsong.model.Song;
  * Song Renderer to display songs in a list.
  * 
  * @author karensantos
+ * @author Jolayemioluwa Ilori
  *
  */
 public class SongRenderer extends JLabel implements ListCellRenderer<Song> {

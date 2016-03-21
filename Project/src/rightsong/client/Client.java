@@ -10,6 +10,7 @@ import rightsong.view.MainFrame;
  * of its methods defined in order to give more functionality to the client.
  *
  * @author Karen Santos
+ * @author Jolayemioluwa Ilori
  * @version November 2014
  */
 public class Client extends AbstractClient {

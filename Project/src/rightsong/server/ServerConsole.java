@@ -5,6 +5,7 @@ package rightsong.server;
  * This class constructs a Server.
  *
  * @author Karen Santos
+ * @author Jolayemioluwa Ilori
  * @version November 2014
  */
 public class ServerConsole {

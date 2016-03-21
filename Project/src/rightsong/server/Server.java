@@ -11,6 +11,7 @@ import rightsong.model.Song;
  * to give more functionality to the server.
  *
  * @author Karen Santos
+ * @author Jolayemioluwa Ilori
  * @version November 2014
  */
 public class Server extends AbstractServer {

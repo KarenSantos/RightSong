@@ -10,6 +10,7 @@ import rightsong.model.*;
  * Controller class for the RightSong client.
  * 
  * @author karensantos
+ * @author Jolayemioluwa Ilori
  * @version November 2014
  *
  */

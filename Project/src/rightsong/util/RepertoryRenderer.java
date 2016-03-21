@@ -12,6 +12,7 @@ import rightsong.model.Repertory;
  * Repertory Renderer to display repertories in a list.
  * 
  * @author karensantos
+ * @author Jolayemioluwa Ilori
  *
  */
 public class RepertoryRenderer extends JLabel implements ListCellRenderer<Repertory> {

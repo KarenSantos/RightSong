@@ -8,6 +8,7 @@ import java.util.List;
  * Genre class.
  * 
  * @author Karen Santos
+ * @author Jolayemioluwa Ilori
  * @version November 2014
  *
  */

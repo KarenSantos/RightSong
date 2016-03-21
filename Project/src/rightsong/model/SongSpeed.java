@@ -4,6 +4,7 @@ package rightsong.model;
  * Song speed enumeration class.
  * 
  * @author Karen Santos
+ * @author Jolayemioluwa Ilori
  * @version November 2014
  *
  */
